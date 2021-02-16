@@ -11,5 +11,6 @@ class MotorcycleDealership(QMainWindow):
 
 app = QApplication(sys.argv)
 window = MotorcycleDealership()
+window.setStyleSheet(open('Stylesheet.qss').read())
 window.show()
 sys.exit(app.exec_())
