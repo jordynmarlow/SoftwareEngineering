@@ -1,0 +1,16 @@
+QWidget {
+    font: bold 10pt "Merriweather";
+    background-color: white;
+    color: #444444;
+}
+QPushButton {
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+QPushButton#filter_inventory_bt, QPushButton#filter_order_bt {
+    background-color: #444444;
+    color: none;
+}
