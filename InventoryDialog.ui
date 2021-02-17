@@ -23,20 +23,20 @@
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>[item name]</string>
    </property>
   </widget>
   <widget class="QLabel" name="description_lbl">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>120</y>
+     <y>140</y>
      <width>381</width>
-     <height>321</height>
+     <height>301</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>[item description]</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -45,7 +45,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="reorder_bt">
    <property name="geometry">
     <rect>
      <x>430</x>
@@ -58,7 +58,7 @@
     <string>Reorder</string>
    </property>
   </widget>
-  <widget class="QSpinBox" name="spinBox">
+  <widget class="QSpinBox" name="reorder_quantity_sb">
    <property name="geometry">
     <rect>
      <x>430</x>
@@ -68,17 +68,17 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="features_lbl">
+  <widget class="QLabel" name="item_no">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>60</y>
      <width>91</width>
-     <height>41</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>Item Number: Quantity:  </string>
+    <string>Item Number:</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -87,7 +87,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="remove_bt">
    <property name="geometry">
     <rect>
      <x>430</x>
@@ -110,20 +110,71 @@
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>[item no]</string>
    </property>
   </widget>
   <widget class="QLabel" name="quantity_lbl">
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>76</y>
+     <y>80</y>
      <width>141</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>[quantity]</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="quantity">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>80</y>
+     <width>91</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Quantity:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="price">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>100</y>
+     <width>91</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Price:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="price_lbl">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>100</y>
+     <width>141</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>[price]</string>
    </property>
   </widget>
  </widget>

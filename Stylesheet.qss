@@ -3,7 +3,7 @@ QWidget {
     background-color: white;
     color: #444444;
 }
-QLabel#features_lbl, QLabel#item_no_lbl, QLabel#quantity_lbl, QLabel#description_lbl {
+QLabel {
     font: 10pt "Merriweather";
 }
 QSpinBox {
