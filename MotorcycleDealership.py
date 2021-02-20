@@ -99,45 +99,55 @@ class Homepage(QMainWindow):
         dlg = Inventory()
         dlg.exec_()
 
-def GenerateCard():
-    credNum = 0
-    for x in range(16):
-        credNum = credNum*10 + randint(0,9)
-    print("Card Int:", credNum)
+def CheckFormatCard(credNum):
+    '''for x in range(16):
+        credNum = credNum_s + str(randint(0,9))
+    print("Card String: " + credNum)
     
-    credNum_s = ""
-    for x in range(16):
-        credNum_s = credNum_s + str(randint(0,9))
-    print("Card String: " + credNum_s)
+    formatCred = credNum[0:4] + "-" + credNum[4:8] + "-" + credNum[8:12] + "-" + credNum[12:16]
+    print("Formatted: " + formatCred)'''
+    checkCard = True
     
-    formatCred = credNum_s[0:4] + "-" + credNum_s[4:8] + "-" + credNum_s[8:12] + "-" + credNum_s[12:16]
-    print("Formatted: " + formatCred)
+    if (len(credNum) == 19):
+        #xxxx-xxxx-xxxx-xxxx
+        if (credNum[4] != "-" or credNum[9] != "-" or credNum[14] != "-"):
+            checkCard = False
+            
+    else: checkCard = False
+            
+    return checkCard
 
-def GenerateSSN():
-    ssnNum = 0
-    for x in range(9):
-        ssnNum = ssnNum*10 + randint(0,9)
-    print("Card Int:", ssnNum)
-    
-    ssnNum_s = ""
-    for x in range(9):
-        ssnNum_s = ssnNum_s + str(randint(0,9))
-    print("Card String: " + ssnNum_s)
-    
-    formatSSN = ssnNum_s[0:3] + "-" + ssnNum_s[3:5] + "-" + ssnNum_s[5:9]
-    print("Formatted: " + formatSSN)
-    
-    
-def GenerateInterest():
-    intRate = round(uniform(3,21), 2)
-    print(intRate)
+def CheckFormatSSN(ssnNum):
+    '''for x in range(9):
+        ssnNum = ssnNum + str(randint(0,9))
+    print("Card String: " + ssnNum)
 
+    formatSSN = ssnNum[0:3] + "-" + ssnNum[3:5] + "-" + ssnNum[5:9]
+    print("Formatted: " + formatSSN)'''
+    checkSSN = True
+    
+    if (len(ssnNum) == 11):
+        #xxx-xx-xxxx
+        if (ssnNum[3] != "-" or ssnNum[6] != "-"):
+            checkSSN = False
+            
+    else: checkSSN = False
+            
+    return checkSSN
+    
+def GenerateInterest(credNum, ssnNum):
+    if (CheckFormatCard(credNum) and CheckFormatSSN(ssnNum)):
+        intRate = round(uniform(3,21), 2)
+        print(intRate)
 
-"""GenerateCard()
-GenerateSSN()
-GenerateInterest()"""
+'''
+print(CheckFormatCard("1234-4321-6343-2346"))
+print(CheckFormatSSN("222-13-2543"))
+GenerateInterest("1234-4321-6343-2346", "222-13-2543")
+'''
 
 app = QApplication(sys.argv)
 window = Homepage()
 window.show()
 sys.exit(app.exec_())
+
