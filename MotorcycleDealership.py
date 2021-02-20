@@ -133,12 +133,11 @@ def GenerateInterest():
     print(intRate)
 
 
-GenerateCard()
+"""GenerateCard()
 GenerateSSN()
-GenerateInterest()
-'''
+GenerateInterest()"""
+
 app = QApplication(sys.argv)
 window = Homepage()
 window.show()
 sys.exit(app.exec_())
-'''
