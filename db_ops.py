@@ -56,7 +56,7 @@ def view_orders_table(cursor, orders_table):
 # Function to view only one inventory that has been filtered according to a user-selected field
 # Arguments include cursor object, the inventory table to be filtered, and the field by which to filter
 # For now, the code assumes that ascending order (ASC) is preferred.
-def view_inventory_table_filtered(cursor, inventory_table, inventory_column):
+def view_inventory_table_sorted(cursor, inventory_table, inventory_column):
     cursor.execute("SELECT * FROM %s ORDER BY %s ASC" % (inventory_table, inventory_column))
     table = cursor.fetchall()
     for rows in table:
@@ -66,7 +66,7 @@ def view_inventory_table_filtered(cursor, inventory_table, inventory_column):
 # Function to view only one orders list that has been filtered according to a user-selected field
 # Arguments include cursor object, the orders list table to be filtered, and the field by which to filter
 # For now, the code assumes that ascending order (ASC) is preferred.
-def view_orders_table_filtered(cursor, orders_table, orders_column):
+def view_orders_table_sorted(cursor, orders_table, orders_column):
     cursor.execute("SELECT * FROM %s ORDER BY %s ASC" % (orders_table, orders_column))
     table = cursor.fetchall()
     for rows in table:
@@ -127,7 +127,7 @@ def add_work_order(connection, date, order_id, customer_first, customer_last, ph
 def add_bike_order(connection, date, item_number, interest_rate, archived):
     # Uses the connection object to execute an insertion. Important: arguments used in VALUES need to be strings inside
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
-    connection.execute("INSERT INTO MerchandiseInventory (DATE,ITEM_NUMBER,INTEREST_RATE,ARCHIVED) VALUES "
+    connection.execute("INSERT INTO BikeOrders (DATE,ITEM_NUMBER,INTEREST_RATE,ARCHIVED) VALUES "
                        "(%s,%s,%s,%s)" % (date, item_number, interest_rate, archived))
 
     connection.commit()  # Commit the changes made to the database. Won't save without this.
@@ -139,7 +139,7 @@ def add_bike_order(connection, date, item_number, interest_rate, archived):
 def add_merchandise_order(connection, date, item_number, archived):
     # Uses the connection object to execute an insertion. Important: arguments used in VALUES need to be strings inside
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
-    connection.execute("INSERT INTO MerchandiseInventory (DATE,ITEM_NUMBER,ARCHIVED) VALUES "
+    connection.execute("INSERT INTO MerchandiseOrders (DATE,ITEM_NUMBER,ARCHIVED) VALUES "
                        "(%s,%s,%s)" % (date, item_number, archived))
 
     connection.commit()  # Commit the changes made to the database. Won't save without this.
