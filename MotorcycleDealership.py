@@ -1,8 +1,11 @@
-import sys
+import sys, configparser
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from random import *
+
+# constants
+CONFIG_FILE = 'config.ini'
 
 class Timesheet(QDialog):
     def __init__(self):
@@ -72,7 +75,25 @@ class Homepage(QMainWindow):
         self.employees_bt.clicked.connect(self.openEmployees)
         self.ads_bt.clicked.connect(self.openAds)
         self.new_order_bt.clicked.connect(self.openNewOrder)
+        self.change_pin_bt.clicked.connect(self.changePIN)
         # when a widget in inventory_scroll_area is clicked, connect to self.openInventory
+    
+    def getPIN(self):
+        pin, ok = QInputDialog.getText(self, 'Manager PIN', 'Enter your PIN:')
+        parser = configparser.ConfigParser()
+        parser.read(CONFIG_FILE)
+        while ok and pin != parser['DEFAULT']['ManagerPIN']:
+            pin, ok = QInputDialog.getText(self, 'Manager Access Only', 'Incorrect PIN. Please try again.')
+        if ok:
+            return True
+    
+    def changePIN(self):
+        if self.getPIN():
+            new_pin, ok = QInputDialog.getText(self, 'Manager PIN', 'Enter your new PIN:')
+            parser = configparser.ConfigParser()
+            parser['DEFAULT']['ManagerPIN'] = new_pin
+            with open(CONFIG_FILE, 'w') as config_file:
+                parser.write(config_file)
 
     def openTimesheet(self):
         #open TimeSheetDialog.ui
@@ -81,13 +102,15 @@ class Homepage(QMainWindow):
 
     def openEmployees(self):
         #open EmployeesDialog.ui
-        dlg = Employees()
-        dlg.exec_()
+        if self.getPIN():
+            dlg = Employees()
+            dlg.exec_()
 
     def openAds(self):
         #open AdvertisementsDialog.ui
-        dlg = Advertisements()
-        dlg.exec_()
+        if self.getPIN():
+            dlg = Advertisements()
+            dlg.exec_()
 
     def openNewOrder(self):
         #open NewOrderDialog.ui
