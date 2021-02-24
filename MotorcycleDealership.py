@@ -16,7 +16,7 @@ class Employees(QDialog):
         uic.loadUi('EmployeesDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_employee_bt.clicked.connect(self.openAddEmployees)
-    
+
     def openAddEmployees(self):
         #open AddEmployeeDialog.ui
         dlg = AddEmployee()
@@ -34,7 +34,7 @@ class Advertisements(QDialog):
         uic.loadUi('AdvertisementsDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_advertisement_bt.clicked.connect(self.openAddAdvertisements)
-    
+
     def openAddAdvertisements(self):
         #open AddAdvertisementDialog.ui
         dlg = AddAdvertisements()
@@ -58,6 +58,12 @@ class Inventory(QDialog):
         uic.loadUi('InventoryDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
 
+class ItemButton(QWidget):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('itemButton.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
+
 class Homepage(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -72,6 +78,7 @@ class Homepage(QMainWindow):
         self.employees_bt.clicked.connect(self.openEmployees)
         self.ads_bt.clicked.connect(self.openAds)
         self.new_order_bt.clicked.connect(self.openNewOrder)
+        self.wip_bt.clicked.connect(self.create_inventory_item)
         # when a widget in inventory_scroll_area is clicked, connect to self.openInventory
 
     def openTimesheet(self):
@@ -99,22 +106,30 @@ class Homepage(QMainWindow):
         dlg = Inventory()
         dlg.exec_()
 
+    def create_inventory_item(self):
+        b1 = QPushButton("new")
+        b2 = QPushButton("New")
+        orders = self.order_scroll_area.layout()
+        orders.insertWidget(orders.count() - 1, b1)
+        items = self.inventory_scroll_area.layout()
+        items.insertWidget(items.count() - 1, b2)
+
 def CheckFormatCard(credNum):
     '''for x in range(16):
         credNum = credNum_s + str(randint(0,9))
     print("Card String: " + credNum)
-    
+
     formatCred = credNum[0:4] + "-" + credNum[4:8] + "-" + credNum[8:12] + "-" + credNum[12:16]
     print("Formatted: " + formatCred)'''
     checkCard = True
-    
+
     if (len(credNum) == 19):
         #xxxx-xxxx-xxxx-xxxx
         if (credNum[4] != "-" or credNum[9] != "-" or credNum[14] != "-"):
             checkCard = False
-            
+
     else: checkCard = False
-            
+
     return checkCard
 
 def CheckFormatSSN(ssnNum):
@@ -125,16 +140,16 @@ def CheckFormatSSN(ssnNum):
     formatSSN = ssnNum[0:3] + "-" + ssnNum[3:5] + "-" + ssnNum[5:9]
     print("Formatted: " + formatSSN)'''
     checkSSN = True
-    
+
     if (len(ssnNum) == 11):
         #xxx-xx-xxxx
         if (ssnNum[3] != "-" or ssnNum[6] != "-"):
             checkSSN = False
-            
+
     else: checkSSN = False
-            
+
     return checkSSN
-    
+
 def GenerateInterest(credNum, ssnNum):
     if (CheckFormatCard(credNum) and CheckFormatSSN(ssnNum)):
         intRate = round(uniform(3,21), 2)
@@ -150,4 +165,3 @@ app = QApplication(sys.argv)
 window = Homepage()
 window.show()
 sys.exit(app.exec_())
-
