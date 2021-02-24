@@ -48,12 +48,31 @@ class AddAdvertisements(QDialog):
         super().__init__()
         uic.loadUi('AddAdvertisementDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
+        
+class AddPayment(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('AddPaymentDialog.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
+        self.get_rate_bt.clicked.connect(self.getInterest)
+        
+    def getInterest(self):
+        checkCard = CheckFormatCard(self.credit_card_text.toPlainText())
+        checkSSN = CheckFormatSSN(self.ssn_text.toPlainText())
+        if (checkCard and checkSSN):
+            self.interest_rate_lbl.setText(GenerateInterest())
 
 class NewOrder(QDialog):
     def __init__(self):
         super().__init__()
         uic.loadUi('NewOrderDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
+        self.add_payment_bt_1.clicked.connect(self.openAddPayment)
+        
+    def openAddPayment(self):
+        #open AddPaymentDialog.ui
+        dlg = AddPayment()
+        dlg.exec_()
 
 class Inventory(QDialog):
     def __init__(self):
@@ -158,10 +177,11 @@ def CheckFormatSSN(ssnNum):
             
     return checkSSN
     
-def GenerateInterest(credNum, ssnNum):
-    if (CheckFormatCard(credNum) and CheckFormatSSN(ssnNum)):
-        intRate = round(uniform(3,21), 2)
-        print(intRate)
+def GenerateInterest():
+    #if (CheckFormatCard(credNum) and CheckFormatSSN(ssnNum)):
+    intRate = round(uniform(3,21), 2)
+    return str(intRate)
+    #     print(intRate)
 
 '''
 print(CheckFormatCard("1234-4321-6343-2346"))

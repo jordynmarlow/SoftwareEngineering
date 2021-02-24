@@ -213,7 +213,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="add_payment_bt_1">
    <property name="geometry">
     <rect>
      <x>350</x>
