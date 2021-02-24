@@ -61,6 +61,7 @@ class AddPayment(QDialog):
         checkSSN = CheckFormatSSN(self.ssn_text.toPlainText())
         if (checkCard and checkSSN):
             self.interest_rate_lbl.setText(GenerateInterest())
+            self.get_rate_bt.hide()
 
 class NewOrder(QDialog):
     def __init__(self):
@@ -103,8 +104,7 @@ class Homepage(QMainWindow):
         parser.read(CONFIG_FILE)
         while ok and pin != parser['DEFAULT']['ManagerPIN']:
             pin, ok = QInputDialog.getText(self, 'Manager Access Only', 'Incorrect PIN. Please try again.')
-        if ok:
-            return True
+        return ok
     
     def changePIN(self):
         if self.getPIN():
