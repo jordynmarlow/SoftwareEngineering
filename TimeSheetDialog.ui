@@ -16,9 +16,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>360</y>
-     <width>341</width>
+     <x>480</x>
+     <y>390</y>
+     <width>311</width>
      <height>32</height>
     </rect>
    </property>
@@ -32,14 +32,14 @@
   <widget class="QTableWidget" name="tableWidget">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>70</y>
-     <width>491</width>
-     <height>261</height>
+     <x>217</x>
+     <y>82</y>
+     <width>381</width>
+     <height>241</height>
     </rect>
    </property>
    <property name="rowCount">
-    <number>6</number>
+    <number>7</number>
    </property>
    <property name="columnCount">
     <number>3</number>
@@ -67,6 +67,11 @@
    <row>
     <property name="text">
      <string>Thursday</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Friday</string>
     </property>
    </row>
    <row>
@@ -101,9 +106,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox">
    <property name="geometry">
     <rect>
-     <x>240</x>
+     <x>290</x>
      <y>140</y>
-     <width>101</width>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -117,9 +122,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>389</x>
      <y>140</y>
-     <width>101</width>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -133,9 +138,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
    <property name="geometry">
     <rect>
-     <x>490</x>
+     <x>489</x>
      <y>140</y>
-     <width>101</width>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -149,9 +154,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>300</y>
-     <width>101</width>
+     <x>289</x>
+     <y>260</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -165,9 +170,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>300</y>
-     <width>101</width>
+     <x>389</x>
+     <y>260</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -181,9 +186,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_6">
    <property name="geometry">
     <rect>
-     <x>490</x>
-     <y>300</y>
-     <width>101</width>
+     <x>489</x>
+     <y>260</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -197,9 +202,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_7">
    <property name="geometry">
     <rect>
-     <x>490</x>
-     <y>260</y>
-     <width>101</width>
+     <x>489</x>
+     <y>230</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -213,9 +218,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_8">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>260</y>
-     <width>101</width>
+     <x>389</x>
+     <y>230</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -229,9 +234,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_9">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>260</y>
-     <width>101</width>
+     <x>289</x>
+     <y>230</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -245,9 +250,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_10">
    <property name="geometry">
     <rect>
-     <x>490</x>
-     <y>220</y>
-     <width>101</width>
+     <x>489</x>
+     <y>200</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -261,9 +266,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_11">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>220</y>
-     <width>101</width>
+     <x>389</x>
+     <y>200</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -277,9 +282,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_12">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>220</y>
-     <width>101</width>
+     <x>290</x>
+     <y>200</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -293,9 +298,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_13">
    <property name="geometry">
     <rect>
-     <x>490</x>
-     <y>180</y>
-     <width>101</width>
+     <x>489</x>
+     <y>170</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -309,9 +314,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_14">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>180</y>
-     <width>101</width>
+     <x>389</x>
+     <y>170</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
@@ -325,9 +330,9 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_15">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>180</y>
-     <width>101</width>
+     <x>290</x>
+     <y>170</y>
+     <width>91</width>
      <height>22</height>
     </rect>
    </property>
