@@ -49,7 +49,7 @@ class AddAdvertisements(QDialog):
         uic.loadUi('AddAdvertisementDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         
-class AddPayment(QDialog):
+class AddPayment(QDialog): # possibly in openAddPayment functions from new orders, send in the price as well (Phil)
     def __init__(self):
         super().__init__()
         uic.loadUi('AddPaymentDialog.ui', self)
@@ -62,9 +62,10 @@ class AddPayment(QDialog):
         if (CheckFormatCard(credNum) and CheckFormatSSN(ssnNum)):
             self.message_lbl.setText("Interest generated and saved!")
             self.interest_rate_lbl.setText(GenerateInterest(credNum, ssnNum))
-            self.get_rate_bt.hide()
+            #self.get_rate_bt.hide()
         else: 
             self.message_lbl.setText("Wrong format for Credit Card or SSN! Please double check them and try again.")
+            self.interest_rate_lbl.setText("")
             
 class NewOrder(QDialog):
     def __init__(self):
