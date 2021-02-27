@@ -57,12 +57,15 @@ class AddPayment(QDialog):
         self.get_rate_bt.clicked.connect(self.getInterest)
         
     def getInterest(self):
-        checkCard = CheckFormatCard(self.credit_card_text.toPlainText())
-        checkSSN = CheckFormatSSN(self.ssn_text.toPlainText())
-        if (checkCard and checkSSN):
-            self.interest_rate_lbl.setText(GenerateInterest())
+        credNum = self.credit_card_text.toPlainText()
+        ssnNum = self.ssn_text.toPlainText()
+        if (CheckFormatCard(credNum) and CheckFormatSSN(ssnNum)):
+            self.message_lbl.setText("Interest generated and saved!")
+            self.interest_rate_lbl.setText(GenerateInterest(credNum, ssnNum))
             self.get_rate_bt.hide()
-
+        else: 
+            self.message_lbl.setText("Wrong format for Credit Card or SSN! Please double check them and try again.")
+            
 class NewOrder(QDialog):
     def __init__(self):
         super().__init__()
@@ -150,10 +153,17 @@ def CheckFormatCard(credNum):
     print("Formatted: " + formatCred)'''
     checkCard = True
     
-    if (len(credNum) == 19):
+    if (len(credNum) == 19): # correct length
         #xxxx-xxxx-xxxx-xxxx
-        if (credNum[4] != "-" or credNum[9] != "-" or credNum[14] != "-"):
+        if (credNum[4] != "-" or credNum[9] != "-" or credNum[14] != "-"): # correct dash spots
             checkCard = False
+        else: # only integers
+            noDash = credNum.split("-")
+            for num in noDash:
+                try:
+                    int(num)
+                except ValueError:
+                    checkCard = False
             
     else: checkCard = False
             
@@ -168,29 +178,50 @@ def CheckFormatSSN(ssnNum):
     print("Formatted: " + formatSSN)'''
     checkSSN = True
     
-    if (len(ssnNum) == 11):
+    if (len(ssnNum) == 11): # correct length
         #xxx-xx-xxxx
-        if (ssnNum[3] != "-" or ssnNum[6] != "-"):
+        if (ssnNum[3] != "-" or ssnNum[6] != "-"): # correct dash spots
             checkSSN = False
+            
+        else: # only integers
+            noDash = ssnNum.split("-")
+            for num in noDash:
+                try:
+                    int(num)
+                except ValueError:
+                    checkSSN = False
             
     else: checkSSN = False
             
     return checkSSN
     
-def GenerateInterest():
-    #if (CheckFormatCard(credNum) and CheckFormatSSN(ssnNum)):
+def GenerateInterest(credNum, ssnNum):
+    ''' random interest rate
     intRate = round(uniform(3,21), 2)
     return str(intRate)
     #     print(intRate)
+    '''
+    credNoDash = credNum.split("-")
+    ssnNoDash = ssnNum.split("-")
+    finalC = 1
+    finalS = 1
+    
+    for cNum in credNoDash:
+        finalC += finalC * int(cNum) + int(cNum)/10000
+        
+    for sNum in ssnNoDash:
+        finalS += finalS * int(sNum) + int(sNum)/10000
+
+    interest = round(finalC%11 + finalS%11 + 1, 2)
+    return str(interest)
 
 '''
-print(CheckFormatCard("1234-4321-6343-2346"))
-print(CheckFormatSSN("222-13-2543"))
-GenerateInterest("1234-4321-6343-2346", "222-13-2543")
+#print(CheckFormatCard("1234-4421-6333-2346"))
+#print(CheckFormatSSN("222-13-2443"))
+GenerateInterest("3274-3422-6739-2367", "236-16-2838")
 '''
 
 app = QApplication(sys.argv)
 window = Homepage()
 window.show()
 sys.exit(app.exec_())
-
