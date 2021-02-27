@@ -109,10 +109,16 @@ class Homepage(QMainWindow):
     def create_inventory_item(self):
         b1 = QPushButton("new")
         b2 = QPushButton("New")
-        orders = self.order_scroll_area.layout()
-        orders.insertWidget(orders.count() - 1, b1)
-        items = self.inventory_scroll_area.layout()
-        items.insertWidget(items.count() - 1, b2)
+        orders = self.order_layout.layout()
+        if orders is None:
+            print ("Could not get order layout")
+            return None
+        orders.insertWidget(0, b1)
+        items = self.inventory_layout.layout()
+        if items is None:
+            print ("Could not get inventory layout")
+            return None
+        items.insertWidget(0, b2)
 
 def CheckFormatCard(credNum):
     '''for x in range(16):
