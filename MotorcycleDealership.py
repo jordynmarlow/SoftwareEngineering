@@ -64,16 +64,25 @@ class AddPayment(QDialog):
             self.get_rate_bt.hide()
 
 class NewOrder(QDialog):
-    def __init__(self):
+    def __init__(self, homepage):
         super().__init__()
-        uic.loadUi('NewOrderDialog.ui', self)
+        self.homepage = homepage
+        self.mechanics = ['mechanic1', 'mechanic2'] # change this list to pull from all mechanics in db
+        uic.loadUi('NewWorkOrderDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
-        self.add_payment_bt_1.clicked.connect(self.openAddPayment)
+        #self.add_payment_bt_1.clicked.connect(self.openAddPayment)
+        self.reassign_mechanic_bt.clicked.connect(self.reassignMechanic)
         
     def openAddPayment(self):
         #open AddPaymentDialog.ui
         dlg = AddPayment()
         dlg.exec_()
+
+    def reassignMechanic(self):
+        if self.homepage.getPIN():
+            new_mechanic, ok = QInputDialog.getItem(self, 'Reassign mechanic', 'Choose a new mechanic.', self.mechanics, 0, True)
+            self.mechanic_lbl.setText(new_mechanic)
+            # change mechanic name in database for this work order
 
 class Inventory(QDialog):
     def __init__(self):
@@ -133,7 +142,7 @@ class Homepage(QMainWindow):
 
     def openNewOrder(self):
         #open NewOrderDialog.ui
-        dlg = NewOrder()
+        dlg = NewOrder(self)
         dlg.exec_()
 
     def openInventory(self):

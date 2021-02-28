@@ -81,7 +81,7 @@
   <widget class="QComboBox" name="comboBox_2">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>80</x>
      <y>90</y>
      <width>121</width>
      <height>22</height>
@@ -92,7 +92,7 @@
    <property name="geometry">
     <rect>
      <x>350</x>
-     <y>210</y>
+     <y>215</y>
      <width>131</width>
      <height>28</height>
     </rect>
@@ -127,8 +127,8 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>20</y>
+     <x>20</x>
+     <y>55</y>
      <width>55</width>
      <height>16</height>
     </rect>
@@ -150,7 +150,7 @@
   <widget class="QComboBox" name="comboBox">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>80</x>
      <y>20</y>
      <width>121</width>
      <height>22</height>
@@ -160,8 +160,8 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>90</y>
+     <x>290</x>
+     <y>20</y>
      <width>55</width>
      <height>16</height>
     </rect>
@@ -209,8 +209,8 @@
   <widget class="QComboBox" name="comboBox_4">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>20</y>
+     <x>80</x>
+     <y>55</y>
      <width>121</width>
      <height>22</height>
     </rect>
@@ -220,10 +220,49 @@
    <property name="geometry">
     <rect>
      <x>360</x>
-     <y>90</y>
+     <y>20</y>
      <width>121</width>
      <height>22</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>60</y>
+     <width>55</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Mechanic</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="mechanic_lbl">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>60</y>
+     <width>121</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="reassign_mechanic_bt">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>86</y>
+     <width>131</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Reassign Mechanic</string>
    </property>
   </widget>
  </widget>
