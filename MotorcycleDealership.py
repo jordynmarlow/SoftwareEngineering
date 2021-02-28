@@ -74,7 +74,7 @@ class NewOrder(QDialog):
         self.mechanics = ['mechanic1', 'mechanic2'] # change this list to pull from all mechanics in db
         uic.loadUi('NewWorkOrderDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
-        #self.add_payment_bt_1.clicked.connect(self.openAddPayment)
+        self.add_payment_bt.clicked.connect(self.openAddPayment)
         self.reassign_mechanic_bt.clicked.connect(self.reassignMechanic)
         
     def openAddPayment(self):

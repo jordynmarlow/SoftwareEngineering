@@ -29,7 +29,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="add_payment_bt_2">
+  <widget class="QPushButton" name="add_payment_bt">
    <property name="geometry">
     <rect>
      <x>400</x>
