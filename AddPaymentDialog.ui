@@ -147,6 +147,22 @@ p, li { white-space: pre-wrap; }
     <string>xxx-xx-xxxx</string>
    </property>
   </widget>
+  <widget class="QLabel" name="message_lbl">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>240</y>
+     <width>471</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="lineWidth">
+    <number>1</number>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
