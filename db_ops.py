@@ -1,14 +1,14 @@
 # This file contains a variety of functions for interacting with the database.
 # These include connecting to the database, viewing the database, filter the database, and adding to the database.
 
-import os  # Allows for directory traversal (delete if not needed)
+# import os  # Allows for directory traversal (delete if not needed)
 import sqlite3  # Allows for sqlite3 database interaction
 from sqlite3 import Error  # Allows python to communicate errors from sqlite3 database
 
 
 # Function to connect to the database
 def connect_db(database):
-    os.chdir('..\sqlite')  # Goes up one directory, then goes into sqlite directory (delete if not needed)
+    # os.chdir('..\sqlite')  # Goes up one directory, then goes into sqlite directory (delete if not needed)
     new_connection = None  # Instantiates connection variable with value None
     try:
         new_connection = sqlite3.connect(database)  # Try to connect to the database
@@ -38,7 +38,7 @@ def view_orders_full(cursor):
 # Function to view only one inventory at once
 # Arguments include cursor object and name of desired table
 def view_inventory_table(cursor, inventory_table):
-    cursor.execute("SELECT * FROM %s" % (inventory_table))  # Select from the desired inventory table...
+    cursor.execute("SELECT * FROM %s" % inventory_table)  # Select from the desired inventory table...
     table = cursor.fetchall()  # Take every entry in this table
     for rows in table:  # For every row in this table,
         print(rows)  # Print the row.
@@ -47,7 +47,7 @@ def view_inventory_table(cursor, inventory_table):
 # Function to view only one order list at once
 # Arguments include cursor object and name of desired table
 def view_orders_table(cursor, orders_table):
-    cursor.execute("SELECT * FROM %s" % (orders_table))  # Select from the desired inventory table...
+    cursor.execute("SELECT * FROM %s" % orders_table)  # Select from the desired inventory table...
     table = cursor.fetchall()  # Take every entry in this table
     for rows in table:  # For every row in this table,
         print(rows)  # Print the row.
@@ -79,7 +79,8 @@ def add_product(connection, year, make, model, color, item_number, price, quanti
     # Uses the connection object to execute an insertion. Important: arguments used in VALUES need to be strings inside
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
     connection.execute("INSERT INTO ProductsInventory (YEAR,MAKE,MODEL,COLOR,ITEM_NUMBER,PRICE,QUANTITY) VALUES "
-                       "(%s,%s,%s,%s,%s,%s,%s)" % (year, make, model, color, item_number, price, quantity))
+                       "('%s','%s','%s','%s','%s','%s','%s')" % (year, make, model, color, item_number, price,
+                                                                 quantity))
 
     connection.commit()  # Commit the changes made to the database. Won't save without this.
     print("Product added!")  # Send message confirming product addition to database.
@@ -91,7 +92,7 @@ def add_part(connection, item_number, price, quantity):
     # Uses the connection object to execute an insertion. Important: arguments used in VALUES need to be strings inside
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
     connection.execute("INSERT INTO PartsInventory (ITEM_NUMBER,PRICE,QUANTITY) VALUES "
-                       "(%s,%s,%s)" % (item_number, price, quantity))
+                       "('%s','%s','%s')" % (item_number, price, quantity))
 
     connection.commit()  # Commit the changes made to the database. Won't save without this.
     print("Part added!")  # Send the message confirming part addition to database.
@@ -102,8 +103,8 @@ def add_part(connection, item_number, price, quantity):
 def add_merchandise(connection, item_number, color, size, price, quantity):
     # Uses the connection object to execute an insertion. Important: arguments used in VALUES need to be strings inside
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
-    connection.execute("INSERT INTO MerchandiseInventory (ITEM_NUMBER,PRICE,QUANTITY) VALUES "
-                       "(%s,%s,%s,%s,%s)" % (item_number, color, size, price, quantity))
+    connection.execute("INSERT INTO MerchandiseInventory (ITEM_NUMBER,COLOR,SIZE,PRICE,QUANTITY) VALUES "
+                       "('%s','%s','%s','%s','%s')" % (item_number, color, size, price, quantity))
 
     connection.commit()  # Commit the changes made to the database. Won't save without this.
     print("Merch added!")  # Send the message confirming merchandise addition to database.
@@ -116,7 +117,8 @@ def add_work_order(connection, date, order_id, customer_first, customer_last, ph
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
     connection.execute(
         "INSERT INTO WorkOrders (DATE,ORDER_ID,CUSTOMER_FIRST,CUSTOMER_LAST,PHONE_NUMBER,MECHANIC,ARCHIVED) VALUES "
-        "(%s,%s,%s,%s,%s,%s,%s)" % (date, order_id, customer_first, customer_last, phone_number, mechanic, archived))
+        "('%s','%s','%s','%s','%s','%s','%s')" % (date, order_id, customer_first, customer_last, phone_number, mechanic,
+                                                  archived))
 
     connection.commit()  # Commit the changes made to the database. Won't save without this.
     print("Work order added!")  # Send the message confirming work order addition to database.
@@ -128,7 +130,7 @@ def add_bike_order(connection, date, item_number, interest_rate, archived):
     # Uses the connection object to execute an insertion. Important: arguments used in VALUES need to be strings inside
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
     connection.execute("INSERT INTO BikeOrders (DATE,ITEM_NUMBER,INTEREST_RATE,ARCHIVED) VALUES "
-                       "(%s,%s,%s,%s)" % (date, item_number, interest_rate, archived))
+                       "('%s','%s','%s','%s')" % (date, item_number, interest_rate, archived))
 
     connection.commit()  # Commit the changes made to the database. Won't save without this.
     print("Bike order added!")  # Send the message confirming bike order addition to database.
@@ -140,7 +142,57 @@ def add_merchandise_order(connection, date, item_number, archived):
     # Uses the connection object to execute an insertion. Important: arguments used in VALUES need to be strings inside
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
     connection.execute("INSERT INTO MerchandiseOrders (DATE,ITEM_NUMBER,ARCHIVED) VALUES "
-                       "(%s,%s,%s)" % (date, item_number, archived))
+                       "('%s','%s','%s')" % (date, item_number, archived))
 
     connection.commit()  # Commit the changes made to the database. Won't save without this.
     print("Merch order added!")  # Send the message confirming merchandise order addition to database.
+
+
+# Function to remove a product from the inventory
+def remove_product(connection, item_number):
+    connection.execute("DELETE FROM ProductsInventory WHERE ITEM_NUMBER = '%s'" % item_number)
+    connection.commit()
+    print("Product removed!")
+
+
+# Function to remove a part from the inventory
+def remove_part(connection, item_number):
+    connection.execute("DELETE FROM PartsInventory WHERE ITEM_NUMBER = '%s'" % item_number)
+    connection.commit()
+    print("Part removed!")
+
+
+# Function to remove a piece of merchandise from the inventory
+def remove_merchandise(connection, item_number):
+    connection.execute("DELETE FROM MerchandiseInventory WHERE ITEM_NUMBER = '%s'" % item_number)
+    connection.commit()
+    print("Merchandise removed!")
+
+
+# Function to remove an order from the work orders list
+def remove_work_order(connection, order_id):
+    connection.execute("DELETE FROM WorkOrders WHERE ORDER_ID = '%s'" % order_id)
+    connection.commit()
+    print("Work Order removed!")
+
+
+# Function to remove an order from the bike orders list
+def remove_bike_order(connection, item_number):
+    connection.execute("DELETE FROM BikeOrders WHERE ITEM_NUMBER = '%s'" % item_number)
+    connection.commit()
+    print("Bike Order removed!")
+
+
+# Function to remove an order from the merchandise orders list
+def remove_merchandise_order(connection, item_number):
+    connection.execute("DELETE FROM MerchandiseOrders WHERE ITEM_NUMBER = '%s'" % item_number)
+    connection.commit()
+    print("Merchandise removed!")
+
+
+# Function to view the list of employees
+def view_employees(cursor):
+    cursor.execute("SELECT * FROM Employees")  # Select from the employees table
+    table = cursor.fetchall()  # Take every entry in this table
+    for rows in table:  # For every row in this table,
+        print(rows)  # Print the row.
