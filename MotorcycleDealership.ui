@@ -176,7 +176,7 @@ color: black;</string>
       <normaloff>images/filter.png</normaloff>images/filter.png</iconset>
     </property>
    </widget>
-   <widget class="QScrollArea" name="inventory_scroll_area">
+   <widget class="QListWidget" name="inventory_list">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -185,49 +185,8 @@ color: black;</string>
       <height>581</height>
      </rect>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>711</width>
-      <height>581</height>
-     </size>
-    </property>
-    <property name="verticalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOn</enum>
-    </property>
-    <property name="widgetResizable">
-     <bool>true</bool>
-    </property>
-    <widget class="QWidget" name="inventory_list">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>693</width>
-       <height>579</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <layout class="QVBoxLayout" name="inventory_layout">
-        <item>
-         <spacer name="end_inventory">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
    </widget>
-   <widget class="QScrollArea" name="order_scroll_area">
+   <widget class="QListWidget" name="orders_list">
     <property name="geometry">
      <rect>
       <x>730</x>
@@ -236,69 +195,14 @@ color: black;</string>
       <height>581</height>
      </rect>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>341</width>
-      <height>581</height>
-     </size>
-    </property>
-    <property name="verticalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOn</enum>
-    </property>
-    <property name="widgetResizable">
-     <bool>true</bool>
-    </property>
-    <widget class="QWidget" name="order_list">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>323</width>
-       <height>579</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <layout class="QVBoxLayout" name="order_layout">
-        <item>
-         <spacer name="end_order">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </widget>
-   <widget class="QPushButton" name="wip_bt">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>50</y>
-      <width>161</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>WIP</string>
-    </property>
    </widget>
    <zorder>widget</zorder>
    <zorder>filter_inventory_bt</zorder>
    <zorder>new_order_bt</zorder>
    <zorder>horizontalLayoutWidget</zorder>
    <zorder>filter_order_bt</zorder>
-   <zorder>inventory_scroll_area</zorder>
-   <zorder>order_scroll_area</zorder>
-   <zorder>wip_bt</zorder>
+   <zorder>inventory_list</zorder>
+   <zorder>orders_list</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -306,7 +210,7 @@ color: black;</string>
      <x>0</x>
      <y>0</y>
      <width>1081</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
