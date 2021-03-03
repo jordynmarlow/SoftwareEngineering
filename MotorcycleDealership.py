@@ -1,60 +1,11 @@
-import sys, sqlite3
 import sys, configparser
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from random import *
-from sqlite3 import Error
 
 # constants
 CONFIG_FILE = 'config.ini'
-
-sql_connection = None
-
-def connect_to_db():
-    try:
-        sql_connection = sqlite3.connect('MotorDB.db')  # Try to connect to the database
-    except Error as e:  # ...Except if there is an sqlite3 error,
-        print(e)  # print the error
-    return sql_connection.cursor()
-
-class InventoryDatabase():
-    def __init__(self):
-        self.cursor = connect_to_db()
-    
-    def get_all_inventory_items(self):
-        self.cursor.execute('SELECT * FROM \
-                                (SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM ProductsInventory I UNION\
-                                SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM PartsInventory I UNION\
-                                SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM MerchandiseInventory I)')
-        return self.cursor.fetchall()
-
-    def get_fields(self, item_no):
-        self.cursor.execute('SELECT * FROM \
-                                (SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM ProductsInventory I UNION\
-                                SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM PartsInventory I UNION\
-                                SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM MerchandiseInventory I) I\
-                            WHERE I.ITEM_NUMBER=\'%s\'' % (item_no))
-        return self.cursor.fetchall()[0]
-
-class OrdersDatabase():
-    def __init__(self):
-        self.cursor = connect_to_db()
-    
-    def get_all_orders(self):
-        self.cursor.execute('SELECT * FROM \
-                                (SELECT O.ORDER_ID, O.DATE FROM WorkOrders O UNION\
-                                SELECT O.ITEM_NUMBER, O.DATE FROM BikeOrders O UNION\
-                                SELECT O.ITEM_NUMBER, O.DATE FROM MerchandiseOrders O)')
-        return self.cursor.fetchall()
-
-    def get_fields(self, item_no):
-        self.cursor.execute('SELECT * FROM \
-                                (SELECT O.ORDER_ID, O.DATE FROM WorkOrders O UNION\
-                                SELECT O.ITEM_NUMBER, O.DATE FROM BikeOrders O UNION\
-                                SELECT O.ITEM_NUMBER, O.DATE FROM MerchandiseOrders O) O\
-                            WHERE O.ITEM_NUMBER=\'%s\'' % (item_no))
-        return self.cursor.fetchall()[0]
 
 class Timesheet(QDialog):
     def __init__(self):
@@ -68,7 +19,7 @@ class Employees(QDialog):
         uic.loadUi('EmployeesDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_employee_bt.clicked.connect(self.openAddEmployees)
-
+    
     def openAddEmployees(self):
         #open AddEmployeeDialog.ui
         dlg = AddEmployee()
@@ -86,7 +37,7 @@ class Advertisements(QDialog):
         uic.loadUi('AdvertisementsDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_advertisement_bt.clicked.connect(self.openAddAdvertisements)
-
+    
     def openAddAdvertisements(self):
         #open AddAdvertisementDialog.ui
         dlg = AddAdvertisements()
@@ -142,22 +93,6 @@ class Inventory(QDialog):
         super().__init__()
         uic.loadUi('InventoryDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
-    
-    def populateFields(self, fields):
-        self.item_no_lbl.setText(fields[0])
-        #self.name_lbl.setText()
-        self.price_lbl.setText(fields[1])
-        self.quantity_lbl.setText(fields[2])
-    
-class Order(QDialog):
-    def __init__(self):
-        super().__init__()
-        uic.loadUi('OrderDialog.ui', self)
-        self.setStyleSheet(open('Stylesheet.qss').read())
-    
-    def populateFields(self, fields):
-        # populate fields in OrderDialog.ui
-        pass
 
 class Homepage(QMainWindow):
     def __init__(self):
@@ -166,8 +101,6 @@ class Homepage(QMainWindow):
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.setWindowTitle('Motorcycle Dealership')
         self.show()
-        self.populateInventoryList()
-        self.populateOrdersList()
         self.widgetInteractions()
 
     def widgetInteractions(self):
@@ -175,22 +108,24 @@ class Homepage(QMainWindow):
         self.employees_bt.clicked.connect(self.openEmployees)
         self.ads_bt.clicked.connect(self.openAds)
         self.new_order_bt.clicked.connect(self.openNewOrder)
-        self.inventory_list.itemClicked.connect(self.openInventoryItem)
-        # self.orders_list.itemClicked.connect(self.openOrder)
+        self.change_pin_bt.clicked.connect(self.changePIN)
+        # when a widget in inventory_scroll_area is clicked, connect to self.openInventory
     
-    def populateInventoryList(self):
-        self.inventory_list.setVerticalScrollBar(QScrollBar(self))
-        self.inventory = InventoryDatabase()
-        items = self.inventory.get_all_inventory_items()
-        for item in items:
-            self.inventory_list.addItem(QListWidgetItem('\t\t\t'.join(item)))
+    def getPIN(self):
+        pin, ok = QInputDialog.getText(self, 'Manager PIN', 'Enter your PIN:')
+        parser = configparser.ConfigParser()
+        parser.read(CONFIG_FILE)
+        while ok and pin != parser['DEFAULT']['ManagerPIN']:
+            pin, ok = QInputDialog.getText(self, 'Manager Access Only', 'Incorrect PIN. Please try again.')
+        return ok
     
-    def populateOrdersList(self):
-        self.orders_list.setVerticalScrollBar(QScrollBar(self))
-        self.orders = OrdersDatabase()
-        items = self.orders.get_all_orders()
-        for item in items:
-            self.orders_list.addItem(QListWidgetItem('\t\t'.join(item)))
+    def changePIN(self):
+        if self.getPIN():
+            new_pin, ok = QInputDialog.getText(self, 'Manager PIN', 'Enter your new PIN:')
+            parser = configparser.ConfigParser()
+            parser['DEFAULT']['ManagerPIN'] = new_pin
+            with open(CONFIG_FILE, 'w') as config_file:
+                parser.write(config_file)
 
     def openTimesheet(self):
         #open TimeSheetDialog.ui
@@ -214,23 +149,16 @@ class Homepage(QMainWindow):
         dlg = NewOrder(self)
         dlg.exec_()
 
-    def openInventoryItem(self, item):
+    def openInventory(self):
         #open InventoryDialog.ui
         dlg = Inventory()
-        dlg.populateFields(self.inventory.get_fields(item.text().split('\t')[0]))
-        dlg.exec_()
-    
-    def openOrder(self, item):
-        #open OrderDialog.ui
-        dlg = Order()
-        dlg.populateFields(self.orders.get_fields(item.text().split('\t')[0]))
         dlg.exec_()
 
 def CheckFormatCard(credNum):
     '''for x in range(16):
         credNum = credNum_s + str(randint(0,9))
     print("Card String: " + credNum)
-
+    
     formatCred = credNum[0:4] + "-" + credNum[4:8] + "-" + credNum[8:12] + "-" + credNum[12:16]
     print("Formatted: " + formatCred)'''
     checkCard = True
@@ -248,7 +176,7 @@ def CheckFormatCard(credNum):
                     checkCard = False
             
     else: checkCard = False
-
+            
     return checkCard
 
 def CheckFormatSSN(ssnNum):
@@ -274,9 +202,9 @@ def CheckFormatSSN(ssnNum):
                     checkSSN = False
             
     else: checkSSN = False
-
+            
     return checkSSN
-
+    
 def GenerateInterest(credNum, ssnNum):
     ''' random interest rate
     intRate = round(uniform(3,21), 2)
