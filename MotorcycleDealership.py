@@ -120,9 +120,10 @@ class Homepage(QMainWindow):
         id = id.lower()             #Keeps CONFIG_FILE sections safe
         parser = configparser.ConfigParser()
         parser.read(CONFIG_FILE)
+        id_list = parser['LOGIN']
         while ok:
             try:
-                parser.sections().index(id) #If a user's section exists, we can move on to asking for a password
+                id_list[id] #If a user's section exists, we can move on to asking for a password
                 break
             except: #If a user's section does not exist, we can ask if they would like to add it before requesting re-entry
                 id, ok = QInputDialog.getText(self, 'Enter Name', 'Enter your name.\nRemember you have to enter it the same way every time.')
@@ -137,33 +138,41 @@ class Homepage(QMainWindow):
         pin, ok = QInputDialog.getText(self, 'Enter PIN', 'Enter PIN for ' + id + ":")
         parser = configparser.ConfigParser()
         parser.read(CONFIG_FILE)
-        while ok and pin != parser[id][id]:
-            pin, ok = QInputDialog.getText(self, 'Enter PIN', 'Incorrect PIN. Please try again.')
+        while ok and pin != parser['LOGIN'][id]:
+            pin, ok = QInputDialog.getText(self, 'Enter PIN', 'Incorrect PIN.\nPlease try again.')
         return ok
 
     def changePIN(self):    # Changes the PIN for a given user
         ok, id = self.verifyID()
         if ok:
             new_pin, ok = QInputDialog.getText(self, 'Enter PIN', 'Enter your new PIN:')
+            while ok:
+                if id == 'manager' or (len(new_pin) == 4 and new_pin.isnumeric()):
+                    break
+                else:
+                    new_pin, ok = QInputDialog.getText(self, 'Enter PIN', 'PIN must be 4-digit number.\nEnter your new PIN:')
             parser = configparser.ConfigParser()
             parser.read(CONFIG_FILE)
-            parser[id][id] = new_pin
+            parser['LOGIN'][id] = new_pin
             with open(CONFIG_FILE, 'w') as config_file:
                 parser.write(config_file)
 
     def openTimesheet(self):
         #open TimeSheetDialog.ui
+        verifyID()
         dlg = Timesheet()
         dlg.exec_()
 
     def openEmployees(self):
         #open EmployeesDialog.ui
+        verifyID()
         if self.getPIN():
             dlg = Employees()
             dlg.exec_()
 
     def openAds(self):
         #open AdvertisementsDialog.ui
+        getPIN('manager')
         if self.getPIN():
             dlg = Advertisements()
             dlg.exec_()
