@@ -159,35 +159,35 @@ class Homepage(QMainWindow):
 
     def openTimesheet(self):
         #open TimeSheetDialog.ui
-        self.verifyID()
-        dlg = Timesheet()
-        dlg.exec_()
+        if self.verifyID():
+            dlg = Timesheet()
+            dlg.exec_()
 
     def openEmployees(self):
         #open EmployeesDialog.ui
-        self.verifyID()
-        if self.getPIN():
-            dlg = Employees()
-            dlg.exec_()
+        if self.verifyID():
+            if self.getPIN():
+                dlg = Employees()
+                dlg.exec_()
 
     def openAds(self):
         #open AdvertisementsDialog.ui
-        self.getPIN('manager')
-        if self.getPIN():
-            dlg = Advertisements()
-            dlg.exec_()
+        if self.getPIN('manager'):
+            if self.getPIN():
+                dlg = Advertisements()
+                dlg.exec_()
 
     def openNewOrder(self):
         #open NewOrderDialog.ui
-        self.verifyID()
-        dlg = NewOrder(self)
-        dlg.exec_()
+        if self.verifyID():
+            dlg = NewOrder(self)
+            dlg.exec_()
 
     def openInventory(self):
         #open InventoryDialog.ui
-        self.verifyID()
-        dlg = Inventory()
-        dlg.exec_()
+        if self.verifyID():
+            dlg = Inventory()
+            dlg.exec_()
 
 def CheckFormatCard(credNum):
     '''for x in range(16):
