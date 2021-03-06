@@ -19,7 +19,7 @@ class Employees(QDialog):
         uic.loadUi('EmployeesDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_employee_bt.clicked.connect(self.openAddEmployees)
-    
+
     def openAddEmployees(self):
         #open AddEmployeeDialog.ui
         dlg = AddEmployee()
@@ -37,7 +37,7 @@ class Advertisements(QDialog):
         uic.loadUi('AdvertisementsDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_advertisement_bt.clicked.connect(self.openAddAdvertisements)
-    
+
     def openAddAdvertisements(self):
         #open AddAdvertisementDialog.ui
         dlg = AddAdvertisements()
@@ -48,7 +48,7 @@ class AddAdvertisements(QDialog):
         super().__init__()
         uic.loadUi('AddAdvertisementDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
-        
+
 class AddPayment(QDialog): # possibly in openAddPayment functions from new orders, send in the price as well (Phil)
     def __init__(self, orderPage):
         super().__init__()
@@ -56,7 +56,7 @@ class AddPayment(QDialog): # possibly in openAddPayment functions from new order
         uic.loadUi('AddPaymentDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.get_rate_bt.clicked.connect(self.getInterest)
-        
+
     def getInterest(self):
         credNum = self.credit_card_text.toPlainText()
         ssnNum = self.ssn_text.toPlainText()
@@ -66,10 +66,10 @@ class AddPayment(QDialog): # possibly in openAddPayment functions from new order
             self.message_lbl.setText("Interest generated and saved!")
             self.orderPage.order_interest_lbl.setText(interest) # set interest in new order page (later should execute when OK is pressed)
             #self.get_rate_bt.hide()
-        else: 
+        else:
             self.message_lbl.setText("Wrong format for Credit Card or SSN! Please double check them and try again.")
             self.interest_rate_lbl.setText("")
-            
+
 class NewOrder(QDialog):
     def __init__(self, homepage):
         super().__init__()
@@ -79,7 +79,7 @@ class NewOrder(QDialog):
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_payment_bt.clicked.connect(self.openAddPayment)
         self.reassign_mechanic_bt.clicked.connect(self.reassignMechanic)
-        
+
     def openAddPayment(self):
         #open AddPaymentDialog.ui
         dlg = AddPayment(self)
@@ -129,59 +129,94 @@ class Homepage(QMainWindow):
         
         self.temp_inv_bt.clicked.connect(self.openInventory)
         # when a widget in inventory_scroll_area is clicked, connect to self.openInventory
-    
-    def getPIN(self):
-        pin, ok = QInputDialog.getText(self, 'Manager PIN', 'Enter your PIN:')
+
+    def addNewID(self, id): # Allows new users to be added. Outside of #51 scope.
+        return False
+
+    def verifyID(self): # Ensures that any ID being entered is valid
+        id, ok = QInputDialog.getText(self, 'Enter ID', 'Enter your ID.')
+        id = "".join(id.split())    #Clears whitespace from entries
+        id = id.lower()             #Keeps CONFIG_FILE sections safe
         parser = configparser.ConfigParser()
         parser.read(CONFIG_FILE)
-        while ok and pin != parser['DEFAULT']['ManagerPIN']:
-            pin, ok = QInputDialog.getText(self, 'Manager Access Only', 'Incorrect PIN. Please try again.')
+        id_list = parser['LOGIN']
+        while ok:
+            try:
+                id_list[id] #If a user's section exists, we can move on to asking for a password
+                break
+            except: #If a user's section does not exist, we can ask if they would like to add it before requesting re-entry
+                id, ok = QInputDialog.getText(self, 'Enter Name', 'Enter your name.\nRemember you have to enter it the same way every time.')
+                if self.addNewID(id):
+                    return True, id
+        if ok:
+            return self.getPIN(id), id
+        else:
+            return False, ""    #No reason to ask for PIN if user stops entering ID
+
+    def getPIN(self, id): # Ensures that any PIN being entered is valid
+        pin, ok = QInputDialog.getText(self, 'Enter PIN', 'Enter PIN for ' + id + ":")
+        parser = configparser.ConfigParser()
+        parser.read(CONFIG_FILE)
+        while ok and pin != parser['LOGIN'][id]:
+            pin, ok = QInputDialog.getText(self, 'Enter PIN', 'Incorrect PIN.\nPlease try again.')
         return ok
-    
-    def changePIN(self):
-        if self.getPIN():
-            new_pin, ok = QInputDialog.getText(self, 'Manager PIN', 'Enter your new PIN:')
+
+    def changePIN(self):    # Changes the PIN for a given user
+        ok, id = self.verifyID()
+        if ok:
+            new_pin, ok = QInputDialog.getText(self, 'Enter PIN', 'Enter your new PIN:')
+            while ok:
+                if id == 'manager' or (len(new_pin) == 4 and new_pin.isnumeric()):
+                    break
+                else:
+                    new_pin, ok = QInputDialog.getText(self, 'Enter PIN', 'PIN must be 4-digit number.\nEnter your new PIN:')
             parser = configparser.ConfigParser()
-            parser['DEFAULT']['ManagerPIN'] = new_pin
+            parser.read(CONFIG_FILE)
+            parser['LOGIN'][id] = new_pin
             with open(CONFIG_FILE, 'w') as config_file:
                 parser.write(config_file)
 
     def openTimesheet(self):
         #open TimeSheetDialog.ui
-        dlg = Timesheet()
-        dlg.exec_()
+        if self.verifyID():
+            dlg = Timesheet()
+            dlg.exec_()
 
     def openEmployees(self):
         #open EmployeesDialog.ui
-        if self.getPIN():
-            dlg = Employees()
-            dlg.exec_()
+        if self.verifyID():
+            if self.getPIN():
+                dlg = Employees()
+                dlg.exec_()
 
     def openAds(self):
         #open AdvertisementsDialog.ui
-        if self.getPIN():
-            dlg = Advertisements()
-            dlg.exec_()
+        if self.getPIN('manager'):
+            if self.getPIN():
+                dlg = Advertisements()
+                dlg.exec_()
 
     def openNewOrder(self):
         #open NewOrderDialog.ui
-        dlg = NewOrder(self)
-        dlg.exec_()
+        if self.verifyID():
+            dlg = NewOrder(self)
+            dlg.exec_()
 
     def openInventory(self):
         #open InventoryDialog.ui
-        dlg = Inventory()
-        dlg.exec_()
+        if self.verifyID():
+            dlg = Inventory()
+            dlg.exec_()
 
 def CheckFormatCard(credNum):
     '''for x in range(16):
         credNum = credNum_s + str(randint(0,9))
     print("Card String: " + credNum)
-    
+
     formatCred = credNum[0:4] + "-" + credNum[4:8] + "-" + credNum[8:12] + "-" + credNum[12:16]
     print("Formatted: " + formatCred)'''
     checkCard = True
-    
+
     if (len(credNum) == 19): # correct length
         #xxxx-xxxx-xxxx-xxxx
         if (credNum[4] != "-" or credNum[9] != "-" or credNum[14] != "-"): # correct dash spots
@@ -193,9 +228,9 @@ def CheckFormatCard(credNum):
                     int(num)
                 except ValueError:
                     checkCard = False
-            
+
     else: checkCard = False
-            
+
     return checkCard
 
 def CheckFormatSSN(ssnNum):
@@ -206,12 +241,12 @@ def CheckFormatSSN(ssnNum):
     formatSSN = ssnNum[0:3] + "-" + ssnNum[3:5] + "-" + ssnNum[5:9]
     print("Formatted: " + formatSSN)'''
     checkSSN = True
-    
+
     if (len(ssnNum) == 11): # correct length
         #xxx-xx-xxxx
         if (ssnNum[3] != "-" or ssnNum[6] != "-"): # correct dash spots
             checkSSN = False
-            
+
         else: # only integers
             noDash = ssnNum.split("-")
             for num in noDash:
@@ -219,11 +254,11 @@ def CheckFormatSSN(ssnNum):
                     int(num)
                 except ValueError:
                     checkSSN = False
-            
+
     else: checkSSN = False
-            
+
     return checkSSN
-    
+
 def GenerateInterest(credNum, ssnNum):
     ''' random interest rate
     intRate = round(uniform(3,21), 2)
@@ -234,10 +269,10 @@ def GenerateInterest(credNum, ssnNum):
     ssnNoDash = ssnNum.split("-")
     finalC = 1
     finalS = 1
-    
+
     for cNum in credNoDash:
         finalC += finalC * int(cNum) + int(cNum)/10000
-        
+
     for sNum in ssnNoDash:
         finalS += finalS * int(sNum) + int(sNum)/10000
 
