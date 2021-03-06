@@ -65,6 +65,32 @@
     </rect>
    </property>
   </widget>
+  <widget class="QLabel" name="order_interest_lbl">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>300</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>300</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Interest:</string>
+   </property>
+  </widget>
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>

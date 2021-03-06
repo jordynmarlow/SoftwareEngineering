@@ -50,8 +50,9 @@ class AddAdvertisements(QDialog):
         self.setStyleSheet(open('Stylesheet.qss').read())
         
 class AddPayment(QDialog): # possibly in openAddPayment functions from new orders, send in the price as well (Phil)
-    def __init__(self):
+    def __init__(self, orderPage):
         super().__init__()
+        self.orderPage = orderPage # order page the payment dialog opened from
         uic.loadUi('AddPaymentDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.get_rate_bt.clicked.connect(self.getInterest)
@@ -60,8 +61,10 @@ class AddPayment(QDialog): # possibly in openAddPayment functions from new order
         credNum = self.credit_card_text.toPlainText()
         ssnNum = self.ssn_text.toPlainText()
         if (CheckFormatCard(credNum) and CheckFormatSSN(ssnNum)):
+            interest = GenerateInterest(credNum, ssnNum)
+            self.interest_rate_lbl.setText(interest)
             self.message_lbl.setText("Interest generated and saved!")
-            self.interest_rate_lbl.setText(GenerateInterest(credNum, ssnNum))
+            self.orderPage.order_interest_lbl.setText(interest) # set interest in new order page (later should execute when OK is pressed)
             #self.get_rate_bt.hide()
         else: 
             self.message_lbl.setText("Wrong format for Credit Card or SSN! Please double check them and try again.")
@@ -79,7 +82,7 @@ class NewOrder(QDialog):
         
     def openAddPayment(self):
         #open AddPaymentDialog.ui
-        dlg = AddPayment()
+        dlg = AddPayment(self)
         dlg.exec_()
 
     def reassignMechanic(self):
@@ -93,6 +96,20 @@ class Inventory(QDialog):
         super().__init__()
         uic.loadUi('InventoryDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
+        self.new_order_bt.clicked.connect(self.openNewOrder)
+        
+    def openNewOrder(self): # open one of the 3 new orders
+        typeLabel = self.type_lbl.text()
+        if (typeLabel == "Motorcycle"):
+            dlg = NewOrder(self)
+            
+        if (typeLabel == "Part"):
+            dlg = NewOrder(self) # change later
+            
+        if (typeLabel == "Merchandise"):
+            dlg = NewOrder(self) # change later
+        
+        dlg.exec_()
 
 class Homepage(QMainWindow):
     def __init__(self):
@@ -109,6 +126,8 @@ class Homepage(QMainWindow):
         self.ads_bt.clicked.connect(self.openAds)
         self.new_order_bt.clicked.connect(self.openNewOrder)
         self.change_pin_bt.clicked.connect(self.changePIN)
+        
+        self.temp_inv_bt.clicked.connect(self.openInventory)
         # when a widget in inventory_scroll_area is clicked, connect to self.openInventory
     
     def getPIN(self):
