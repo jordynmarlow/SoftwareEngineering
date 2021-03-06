@@ -45,7 +45,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="reorder_bt">
+  <widget class="QPushButton" name="reassign_mechanic_bt">
    <property name="geometry">
     <rect>
      <x>410</x>
@@ -55,20 +55,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>Reorder</string>
+    <string>Reassign Mechanic</string>
    </property>
   </widget>
-  <widget class="QSpinBox" name="reorder_quantity_sb">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>80</y>
-     <width>121</width>
-     <height>23</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="remove_bt">
+  <widget class="QPushButton" name="archive_bt">
    <property name="geometry">
     <rect>
      <x>410</x>
@@ -78,7 +68,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Remove</string>
+    <string>Archive</string>
    </property>
   </widget>
  </widget>

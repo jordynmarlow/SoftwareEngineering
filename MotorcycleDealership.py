@@ -5,11 +5,12 @@ from PyQt5.QtWidgets import *
 from random import *
 from sqlite3 import Error
 
+
 sql_connection = None
 
 def connect_to_db():
     try:
-        sql_connection = sqlite3.connect('MotorDB.db')  # Try to connect to the database
+        sql_connection = sqlite3.connect('database.db')  # Try to connect to the database
     except Error as e:  # ...Except if there is an sqlite3 error,
         print(e)  # print the error
     return sql_connection.cursor()
@@ -20,18 +21,30 @@ class InventoryDatabase():
     
     def get_all_inventory_items(self):
         self.cursor.execute('SELECT * FROM \
-                                (SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM ProductsInventory I UNION\
-                                SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM PartsInventory I UNION\
-                                SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM MerchandiseInventory I)')
+                                (SELECT I.ITEM_NUMBER, I.NAME FROM ProductsInventory I UNION\
+                                SELECT I.ITEM_NUMBER, I.NAME FROM PartsInventory I UNION\
+                                SELECT I.ITEM_NUMBER, I.NAME FROM MerchandiseInventory I)')
         return self.cursor.fetchall()
 
-    def get_fields(self, item_no):
+    def get_fields(self, item_no, name):
+        """self.cursor.execute('SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE, I.COLOR FROM ProductsInventory I WHERE I.ITEM_NUMBER=%s AND NAME=\'%s\'' % (item_no, name))
+        if len(self.cursor.fetchall()) > 0:
+
+        self.cursor.execute('SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE FROM PartsInventory I WHERE I.ITEM_NUMBER=%s AND NAME=\'%s\'' % (item_no, name))
+        self.cursor.execute('SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE, I.COLOR, I.SIZE FROM MerchandiseInventory I WHERE I.ITEM_NUMBER=%s AND NAME=\'%s\'' % (item_no, name))
+        print(self.cursor.fetchall())"""
         self.cursor.execute('SELECT * FROM \
-                                (SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM ProductsInventory I UNION\
-                                SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM PartsInventory I UNION\
-                                SELECT I.ITEM_NUMBER, I.PRICE, I.QUANTITY FROM MerchandiseInventory I) I\
-                            WHERE I.ITEM_NUMBER=\'%s\'' % (item_no))
-        return self.cursor.fetchall()[0]
+                                (SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE, I.COLOR FROM ProductsInventory I UNION\
+                                SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE FROM PartsInventory I UNION\
+                                SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE, I.COLOR, I.SIZE FROM MerchandiseInventory I) I WHERE I.ITEM_NUMBER=%s AND NAME=\'%s\'' % (item_no, name))
+        print(self.cursor.fetchall())
+
+    def get_type(self, item_no, name):
+        tables = ['ProductsInventory', 'PartsInventory', 'MerchandiseInventory']
+        for table in tables:
+            self.cursor.execute('SELECT * FROM %s WHERE ITEM_NUMBER=%s AND NAME=\'%s\'' % (table, item_no, name))
+            if len(self.cursor.fetchall()) > 0:
+                return table
 
 class OrdersDatabase():
     def __init__(self):
@@ -40,17 +53,13 @@ class OrdersDatabase():
     def get_all_orders(self):
         self.cursor.execute('SELECT * FROM \
                                 (SELECT O.ORDER_ID, O.DATE FROM WorkOrders O UNION\
-                                SELECT O.ITEM_NUMBER, O.DATE FROM BikeOrders O UNION\
-                                SELECT O.ITEM_NUMBER, O.DATE FROM MerchandiseOrders O)')
+                                SELECT O.ORDER_ID, O.DATE FROM BikeOrders O UNION\
+                                SELECT O.ORDER_ID, O.DATE FROM MerchandiseOrders O)')
         return self.cursor.fetchall()
 
-    def get_fields(self, item_no):
-        self.cursor.execute('SELECT * FROM \
-                                (SELECT O.ORDER_ID, O.DATE FROM WorkOrders O UNION\
-                                SELECT O.ITEM_NUMBER, O.DATE FROM BikeOrders O UNION\
-                                SELECT O.ITEM_NUMBER, O.DATE FROM MerchandiseOrders O) O\
-                            WHERE O.ITEM_NUMBER=\'%s\'' % (item_no))
-        return self.cursor.fetchall()[0]
+    def get_mechanics(order_id):
+        self.cursor.execute('SELECT O.MECHANIC FROM WorkOrders O WHERE O.ORDER_ID=%s' % (order_id))
+        return self.cursor.fetchall()
 
 class Timesheet(QDialog):
     def __init__(self):
@@ -107,20 +116,25 @@ class Inventory(QDialog):
         self.setStyleSheet(open('Stylesheet.qss').read())
     
     def populateFields(self, fields):
-        self.item_no_lbl.setText(fields[0])
-        #self.name_lbl.setText()
-        self.price_lbl.setText(fields[1])
-        self.quantity_lbl.setText(fields[2])
-    
+        # populate description_lbl in InventoryDialog.ui
+        pass
+
 class Order(QDialog):
-    def __init__(self):
+    def __init__(self, order_id):
         super().__init__()
         uic.loadUi('OrderDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
+        self.order_id = order_id
+        self.reassign_mechanic_bt.clicked.connect(self.reassignMechanic)
     
     def populateFields(self, fields):
-        # populate fields in OrderDialog.ui
+        # populate description_lbl in OrderDialog.ui
         pass
+
+    def reassignMechanic(self):
+        if self.homepage.getPIN():
+            mechanics = orders.get_mechanics(self.order_id)
+            new_mechanic, ok = QInputDialog.getItem(self, 'Reassign Mechanic', 'Choose a new mechanic.', mechanics, 0, True)
 
 class Homepage(QMainWindow):
     def __init__(self):
@@ -139,14 +153,13 @@ class Homepage(QMainWindow):
         self.ads_bt.clicked.connect(self.openAds)
         self.new_order_bt.clicked.connect(self.openNewOrder)
         self.inventory_list.itemClicked.connect(self.openInventoryItem)
-        # self.orders_list.itemClicked.connect(self.openOrder)
+        self.orders_list.itemClicked.connect(self.openOrder)
     
     def populateInventoryList(self):
         self.inventory_list.setVerticalScrollBar(QScrollBar(self))
-        self.inventory = InventoryDatabase()
-        items = self.inventory.get_all_inventory_items()
+        items = inventory.get_all_inventory_items()
         for item in items:
-            self.inventory_list.addItem(QListWidgetItem('\t\t\t'.join(item)))
+            self.inventory_list.addItem(QListWidgetItem(str(item[0]) + '\t\t\t' + item[1]))
     
     def populateOrdersList(self):
         self.orders_list.setVerticalScrollBar(QScrollBar(self))
@@ -178,7 +191,9 @@ class Homepage(QMainWindow):
     def openInventoryItem(self, item):
         #open InventoryDialog.ui
         dlg = Inventory()
-        dlg.populateFields(self.inventory.get_fields(item.text().split('\t')[0]))
+        item_no = item.text().split('\t')[0]
+        name = item.text().split('\t')[1]
+        dlg.populateFields(inventory.get_fields(item_no, name))
         dlg.exec_()
     
     def openOrder(self, item):
@@ -234,6 +249,8 @@ print(CheckFormatSSN("222-13-2543"))
 GenerateInterest("1234-4321-6343-2346", "222-13-2543")
 '''
 
+inventory = InventoryDatabase()
+orders = OrdersDatabase()
 app = QApplication(sys.argv)
 window = Homepage()
 window.show()
