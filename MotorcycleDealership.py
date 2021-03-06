@@ -1,4 +1,4 @@
-import sys, configparser
+import sys, configparser, os
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
