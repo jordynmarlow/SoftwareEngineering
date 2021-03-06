@@ -185,16 +185,14 @@ class Homepage(QMainWindow):
     def openEmployees(self):
         #open EmployeesDialog.ui
         if self.verifyID():
-            if self.getPIN():
-                dlg = Employees()
-                dlg.exec_()
+            dlg = Employees()
+            dlg.exec_()
 
     def openAds(self):
         #open AdvertisementsDialog.ui
         if self.getPIN('manager'):
-            if self.getPIN():
-                dlg = Advertisements()
-                dlg.exec_()
+            dlg = Advertisements()
+            dlg.exec_()
 
     def openNewOrder(self):
         #open NewOrderDialog.ui
