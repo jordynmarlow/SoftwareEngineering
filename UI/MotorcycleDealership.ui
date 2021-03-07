@@ -241,6 +241,19 @@ color: black;</string>
       <normaloff>images/filter.png</normaloff>images/filter.png</iconset>
     </property>
    </widget>
+   <widget class="QPushButton" name="temp_inv_bt">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>45</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Temp Inventory</string>
+    </property>
+   </widget>
    <zorder>widget</zorder>
    <zorder>filter_inventory_bt</zorder>
    <zorder>new_order_bt</zorder>
@@ -248,6 +261,7 @@ color: black;</string>
    <zorder>order_scroll_area</zorder>
    <zorder>inventory_scroll_area</zorder>
    <zorder>filter_order_bt</zorder>
+   <zorder>temp_inv_bt</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

@@ -18,7 +18,7 @@
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>501</width>
+     <width>261</width>
      <height>21</height>
     </rect>
    </property>
@@ -175,6 +175,32 @@
    </property>
    <property name="text">
     <string>[price]</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="new_order_bt">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>340</y>
+     <width>101</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>New Order</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="type_lbl">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>20</y>
+     <width>501</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Motorcycle</string>
    </property>
   </widget>
  </widget>

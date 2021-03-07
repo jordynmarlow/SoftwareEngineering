@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>583</width>
-    <height>539</height>
+    <width>545</width>
+    <height>487</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -186,20 +186,36 @@
     <string>Add Payment Method</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>260</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Interest:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="order_interest_lbl">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>260</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <widget class="QLineEdit" name="lineEdit_4">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>20</y>
-     <width>113</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_5">
-   <property name="geometry">
-    <rect>
-     <x>370</x>
+     <x>60</x>
      <y>20</y>
      <width>113</width>
      <height>22</height>
@@ -209,8 +225,18 @@
   <widget class="QLineEdit" name="lineEdit_6">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>60</x>
      <y>90</y>
+     <width>113</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_5">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>20</y>
      <width>113</width>
      <height>22</height>
     </rect>
@@ -219,7 +245,7 @@
   <widget class="QLineEdit" name="lineEdit_7">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>350</x>
      <y>90</y>
      <width>113</width>
      <height>22</height>
