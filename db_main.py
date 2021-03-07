@@ -187,29 +187,36 @@ def add_inventory(connection):
     add_option = input("You can add to: \n 1. Products \n 2. Parts \n 3. Merchandise \n")
     if add_option == '1':
         current_inventory_table = "ProductsInventory"
+        number_input = input("Item Number: ")  # Expected to be randomly generated in implementation
         year_input = input("Year: ")
         make_input = input("Make: ")
         model_input = input("Model: ")
+        name = year_input + " " + make_input + " " + model_input
         color_input = input("Color: ")
-        number_input = input("Item Number: ")  # Expected to be randomly generated in implementation
         price_input = float(input("Price: "))
         quantity_input = int(input("Quantity: "))
-        db_ops.add_product(connection, year_input, make_input, model_input, color_input, number_input,
-                           price_input, quantity_input)
+        desc_input = input("Description: ")
+        db_ops.add_product(connection, number_input, year_input, make_input, model_input, name, color_input,
+                           price_input, quantity_input, desc_input)
     elif add_option == '2':
         current_inventory_table = "PartsInventory"
         number_input = input("Item Number: ")  # Expected to be randomly generated in implementation
+        name_input = input("Item Name: ")
         price_input = float(input("Price: "))
         quantity_input = int(input("Quantity: "))
-        db_ops.add_part(connection, number_input, price_input, quantity_input)
+        desc_input = input("Description: ")
+        db_ops.add_part(connection, number_input, name_input, price_input, quantity_input, desc_input)
     elif add_option == '3':
         current_inventory_table = "MerchandiseInventory"
         number_input = input("Item Number: ")  # Expected to be randomly generated in implementation
+        name_input = input("Item Name: ")
         color_input = input("Color: ")
         size_input = input("Size: ")
         price_input = float(input("Price: "))
         quantity_input = int(input("Quantity: "))
-        db_ops.add_merchandise(connection, number_input, color_input, size_input, price_input, quantity_input)
+        desc_input = input("Description: ")
+        db_ops.add_merchandise(connection, number_input, name_input, color_input, size_input, price_input,
+                               quantity_input, desc_input)
 
 
 # Function that handles the UI side of adding to an orders list.
@@ -224,9 +231,10 @@ def add_orders(connection):
         last_input = input("Customer's Last Name: ")
         phone_input = input("Customer's Phone Number: ")
         mechanic_input = input("Assigned Mechanic: ")
+        comments_input = input("Comments: ")
         archived = 0  # If a new order is being added, it's safe to assume it isn't archived.
         db_ops.add_work_order(connection, date_input, id_input, first_input, last_input, phone_input, mechanic_input,
-                              archived)
+                              comments_input, archived)
     elif add_option == '2':
         current_orders_table = "BikeOrders"
         date_input = input("Date: ")

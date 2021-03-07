@@ -81,7 +81,7 @@
     <string>Add Employee</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit_7">
+  <widget class="QTextEdit" name="status_edit">
    <property name="geometry">
     <rect>
      <x>90</x>
@@ -91,7 +91,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit_8">
+  <widget class="QTextEdit" name="name_edit">
    <property name="geometry">
     <rect>
      <x>90</x>
@@ -101,7 +101,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit_9">
+  <widget class="QTextEdit" name="position_edit">
    <property name="geometry">
     <rect>
      <x>90</x>
