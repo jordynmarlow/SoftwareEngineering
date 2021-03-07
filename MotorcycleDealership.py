@@ -174,7 +174,7 @@ class Inventory(QDialog):
         uic.loadUi('InventoryDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
 
-class Homepage_(QMainWindow):
+class Homepage(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('MotorcycleDealership.ui', self)
@@ -312,6 +312,6 @@ GenerateInterest("3274-3422-6739-2367", "236-16-2838")
 '''
 
 app = QApplication(sys.argv)
-window = Homepage_()
+window = Homepage()
 window.show()
 sys.exit(app.exec_())
