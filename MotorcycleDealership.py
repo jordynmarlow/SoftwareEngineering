@@ -1,9 +1,10 @@
-# main
+# #57
 import sys, configparser
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-from random import *
+import random
+from random import randint
 import db_ops
 
 # constants
@@ -99,7 +100,7 @@ class AddPayment(QDialog): # possibly in openAddPayment functions from new order
             self.message_lbl.setText("Wrong format for Credit Card or SSN! Please double check them and try again.")
             self.interest_rate_lbl.setText("")
 
-class NewOrder(QDialog):
+class NewWorkOrder(QDialog):
     def __init__(self, homepage):
         super().__init__()
         self.homepage = homepage
@@ -176,6 +177,18 @@ class NewOrder(QDialog):
 
     def dbDisconnect(self):
         self.connection.close()
+        
+class NewBikeOrder(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi(UI_PATH + 'NewBikeOrderDialog.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
+        
+class MerchandiseOrder(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi(UI_PATH + 'MerchandiseOrderDialog.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
 
 class Inventory(QDialog):
     def __init__(self):
@@ -184,16 +197,18 @@ class Inventory(QDialog):
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.new_order_bt.clicked.connect(self.openNewOrder)
         
-    def openNewOrder(self): # open one of the 3 new orders
+        self.type_lbl.setText(random.choice(["Motorcycle", "Part", "Merchandise"])) # temp for testing
+        
+    def openNewOrder(self): # open one of the 3 new orders    
         typeLabel = self.type_lbl.text()
         if (typeLabel == "Motorcycle"):
-            dlg = NewOrder(self)
+            dlg = NewBikeOrder()
             
         if (typeLabel == "Part"):
-            dlg = NewOrder(self) # change later
+            dlg = NewWorkOrder(self)
             
         if (typeLabel == "Merchandise"):
-            dlg = NewOrder(self) # change later
+            dlg = MerchandiseOrder()
         
         dlg.exec_()
 
@@ -281,9 +296,9 @@ class Homepage(QMainWindow):
             dlg.exec_()
 
     def openNewOrder(self):
-        #open NewOrderDialog.ui
+        #open NewWorkOrderDialog.ui
         if self.verifyID():
-            dlg = NewOrder(self)
+            dlg = NewWorkOrder(self)
             dlg.exec_()
 
     def openInventory(self):
