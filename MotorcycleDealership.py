@@ -3,6 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from random import *
+import db_ops
 
 # constants
 CONFIG_FILE = 'config.ini'
@@ -28,8 +29,34 @@ class Employees(QDialog):
 class AddEmployee(QDialog):
     def __init__(self):
         super().__init__()
+        self.connection = db_ops.connect_db('MotorDB.db')
         uic.loadUi('AddEmployeeDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
+        self.status_edit.selectionChanged.connect(self.setStatus)
+        self.name_edit.selectionChanged.connect(self.setName)
+        self.position_edit.selectionChanged.connect(self.setPosition)
+        self.employee_id = ""
+        for x in range(6):
+            self.employee_id += str(randint(0,9))
+
+        self.accepted.connect(self.confirm)
+        self.rejected.connect(self.dbDisconnect)
+
+    def setStatus(self):
+        self.status = self.status_edit.toPlainText()
+
+    def setName(self):
+        self.name = self.name_edit.toPlainText()
+
+    def setPosition(self):
+        self.position = self.position_edit.toPlainText()
+
+    def confirm(self):
+        db_ops.add_employee(self.connection, self.employee_id, self.name, self.position, self.status)
+        db_ops.add_timesheet(self.connection, self.employee_id)
+
+    def dbDisconnect(self):
+        self.connection.close()
 
 class Advertisements(QDialog):
     def __init__(self):
@@ -79,6 +106,21 @@ class NewOrder(QDialog):
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_payment_bt.clicked.connect(self.openAddPayment)
         self.reassign_mechanic_bt.clicked.connect(self.reassignMechanic)
+        self.year_edit.editingFinished.connect(self.setYear)
+        self.make_edit.editingFinished.connect(self.setMake)
+        self.model_edit.editingFinished.connect(self.setModel)
+        self.first_edit.editingFinished.connect(self.setFirst)
+        self.last_edit.editingFinished.connect(self.setLast)
+        self.phone_edit.editingFinished.connect(self.setPhone)
+        self.date_edit.dateChanged.connect(self.setStartDate)
+        self.end_date = "defaultend"
+        self.comments_edit.textChanged.connect(self.setComments)
+        self.order_id = ""
+        for x in range(6):
+            self.order_id += str(randint(0,9))
+
+        self.accepted.connect(self.confirm)
+        self.rejected.connect(self.dbDisconnect)
 
     def openAddPayment(self):
         #open AddPaymentDialog.ui
@@ -89,7 +131,42 @@ class NewOrder(QDialog):
         if self.homepage.getPIN():
             new_mechanic, ok = QInputDialog.getItem(self, 'Reassign mechanic', 'Choose a new mechanic.', self.mechanics, 0, True)
             self.mechanic_lbl.setText(new_mechanic)
+            self.mechanic = new_mechanic
             # change mechanic name in database for this work order
+
+    def setYear(self):
+        self.year = self.year_edit.text()
+
+    def setMake(self):
+        self.make = self.make_edit.text()
+
+    def setModel(self):
+        self.model = self.model_edit.text()
+
+    def setFirst(self):
+        self.first = self.first_edit.text()
+
+    def setLast(self):
+        self.last = self.last_edit.text()
+
+    def setPhone(self):
+        self.phone = self.phone_edit.text()
+
+    def setStartDate(self):
+        self.start_date = self.date_edit.date().toString("MM/dd/yyyy")
+
+    def setEndDate(self):
+        pass
+
+    def setComments(self):
+        self.comments = self.comments_edit.toPlainText()
+
+    def confirm(self):
+        db_ops.add_work_order(self.connection, self.order_id, self.start_date, self.end_date, self.first, self.last, self.phone, self.mechanic,
+                               self.comments, "0")
+
+    def dbDisconnect(self):
+        self.connection.close()
 
 class Inventory(QDialog):
     def __init__(self):
