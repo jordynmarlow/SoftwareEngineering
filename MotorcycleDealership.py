@@ -79,8 +79,9 @@ class AddAdvertisements(QDialog):
         self.setStyleSheet(open('Stylesheet.qss').read())
 
 class AddPayment(QDialog): # possibly in openAddPayment functions from new orders, send in the price as well (Phil)
-    def __init__(self):
+    def __init__(self, orderPage):
         super().__init__()
+        self.orderPage = orderPage # order page the payment dialog opened from
         uic.loadUi(UI_PATH + 'AddPaymentDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.get_rate_bt.clicked.connect(self.getInterest)
@@ -89,8 +90,10 @@ class AddPayment(QDialog): # possibly in openAddPayment functions from new order
         credNum = self.credit_card_text.toPlainText()
         ssnNum = self.ssn_text.toPlainText()
         if (CheckFormatCard(credNum) and CheckFormatSSN(ssnNum)):
+            interest = GenerateInterest(credNum, ssnNum)
+            self.interest_rate_lbl.setText(interest)
             self.message_lbl.setText("Interest generated and saved!")
-            self.interest_rate_lbl.setText(GenerateInterest(credNum, ssnNum))
+            self.orderPage.order_interest_lbl.setText(interest) # set interest in new order page (later should execute when OK is pressed)
             #self.get_rate_bt.hide()
         else:
             self.message_lbl.setText("Wrong format for Credit Card or SSN! Please double check them and try again.")
@@ -126,11 +129,15 @@ class NewOrder(QDialog):
 
     def openAddPayment(self):
         #open AddPaymentDialog.ui
-        dlg = AddPayment()
+        dlg = AddPayment(self)
         dlg.exec_()
 
     def reassignMechanic(self):
-        if self.homepage.getPIN():
+        id, ok = QInputDialog.getText(self, 'Enter ID', 'Enter your ID.')
+        id = "".join(id.split())    #Clears whitespace from entries
+        id = id.lower()             #Keeps CONFIG_FILE sections safe
+        
+        if self.homepage.getPIN(id):
             new_mechanic, ok = QInputDialog.getItem(self, 'Reassign mechanic', 'Choose a new mechanic.', self.mechanics, 0, True)
             self.mechanic_lbl.setText(new_mechanic)
             self.mechanic = new_mechanic
@@ -175,6 +182,20 @@ class Inventory(QDialog):
         super().__init__()
         uic.loadUi(UI_PATH + 'InventoryDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
+        self.new_order_bt.clicked.connect(self.openNewOrder)
+        
+    def openNewOrder(self): # open one of the 3 new orders
+        typeLabel = self.type_lbl.text()
+        if (typeLabel == "Motorcycle"):
+            dlg = NewOrder(self)
+            
+        if (typeLabel == "Part"):
+            dlg = NewOrder(self) # change later
+            
+        if (typeLabel == "Merchandise"):
+            dlg = NewOrder(self) # change later
+        
+        dlg.exec_()
 
 class Homepage(QMainWindow):
     def __init__(self):
@@ -191,50 +212,85 @@ class Homepage(QMainWindow):
         self.ads_bt.clicked.connect(self.openAds)
         self.new_order_bt.clicked.connect(self.openNewOrder)
         self.change_pin_bt.clicked.connect(self.changePIN)
+        
+        self.temp_inv_bt.clicked.connect(self.openInventory)
         # when a widget in inventory_scroll_area is clicked, connect to self.openInventory
 
-    def getPIN(self):
-        pin, ok = QInputDialog.getText(self, 'Manager PIN', 'Enter your PIN:')
+    def addNewID(self, id): # Allows new users to be added. Outside of #51 scope.
+        return False
+
+    def verifyID(self): # Ensures that any ID being entered is valid
+        id, ok = QInputDialog.getText(self, 'Enter ID', 'Enter your ID.')
+        id = "".join(id.split())    #Clears whitespace from entries
+        id = id.lower()             #Keeps CONFIG_FILE sections safe
         parser = configparser.ConfigParser()
         parser.read(CONFIG_FILE)
-        while ok and pin != parser['DEFAULT']['ManagerPIN']:
-            pin, ok = QInputDialog.getText(self, 'Manager Access Only', 'Incorrect PIN. Please try again.')
+        id_list = parser['LOGIN']
+        while ok:
+            try:
+                id_list[id] #If a user's section exists, we can move on to asking for a password
+                break
+            except: #If a user's section does not exist, we can ask if they would like to add it before requesting re-entry
+                id, ok = QInputDialog.getText(self, 'Enter Name', 'Enter your name.\nRemember you have to enter it the same way every time.')
+                if self.addNewID(id):
+                    return True, id
+        if ok:
+            return self.getPIN(id), id
+        else:
+            return False, ""    #No reason to ask for PIN if user stops entering ID
+
+    def getPIN(self, id): # Ensures that any PIN being entered is valid
+        pin, ok = QInputDialog.getText(self, 'Enter PIN', 'Enter PIN for ' + id + ":")
+        parser = configparser.ConfigParser()
+        parser.read(CONFIG_FILE)
+        while ok and pin != parser['LOGIN'][id]:
+            pin, ok = QInputDialog.getText(self, 'Enter PIN', 'Incorrect PIN.\nPlease try again.')
         return ok
 
-    def changePIN(self):
-        if self.getPIN():
-            new_pin, ok = QInputDialog.getText(self, 'Manager PIN', 'Enter your new PIN:')
+    def changePIN(self):    # Changes the PIN for a given user
+        ok, id = self.verifyID()
+        if ok:
+            new_pin, ok = QInputDialog.getText(self, 'Enter PIN', 'Enter your new PIN:')
+            while ok:
+                if id == 'manager' or (len(new_pin) == 4 and new_pin.isnumeric()):
+                    break
+                else:
+                    new_pin, ok = QInputDialog.getText(self, 'Enter PIN', 'PIN must be 4-digit number.\nEnter your new PIN:')
             parser = configparser.ConfigParser()
-            parser['DEFAULT']['ManagerPIN'] = new_pin
+            parser.read(CONFIG_FILE)
+            parser['LOGIN'][id] = new_pin
             with open(CONFIG_FILE, 'w') as config_file:
                 parser.write(config_file)
 
     def openTimesheet(self):
         #open TimeSheetDialog.ui
-        dlg = Timesheet()
-        dlg.exec_()
+        if self.verifyID():
+            dlg = Timesheet()
+            dlg.exec_()
 
     def openEmployees(self):
         #open EmployeesDialog.ui
-        if self.getPIN():
+        if self.verifyID():
             dlg = Employees()
             dlg.exec_()
 
     def openAds(self):
         #open AdvertisementsDialog.ui
-        if self.getPIN():
+        if self.getPIN('manager'):
             dlg = Advertisements()
             dlg.exec_()
 
     def openNewOrder(self):
         #open NewOrderDialog.ui
-        dlg = NewOrder(self)
-        dlg.exec_()
+        if self.verifyID():
+            dlg = NewOrder(self)
+            dlg.exec_()
 
     def openInventory(self):
         #open InventoryDialog.ui
-        dlg = Inventory()
-        dlg.exec_()
+        if self.verifyID():
+            dlg = Inventory()
+            dlg.exec_()
 
 def CheckFormatCard(credNum):
     '''for x in range(16):
