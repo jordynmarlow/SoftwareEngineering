@@ -1,9 +1,10 @@
-# main
+# #57
 import sys, configparser
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-from random import *
+import random
+from random import randint
 import db_ops
 
 # constants
@@ -99,7 +100,7 @@ class AddPayment(QDialog): # possibly in openAddPayment functions from new order
             self.message_lbl.setText("Wrong format for Credit Card or SSN! Please double check them and try again.")
             self.interest_rate_lbl.setText("")
 
-class NewOrder(QDialog):
+class NewWorkOrder(QDialog):
     def __init__(self, homepage):
         super().__init__()
         self.homepage = homepage
@@ -110,7 +111,7 @@ class NewOrder(QDialog):
         uic.loadUi(UI_PATH + 'NewWorkOrderDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_payment_bt.clicked.connect(self.openAddPayment)
-        self.reassign_mechanic_bt.clicked.connect(self.reassignMechanic)
+        self.add_mechanic_bt.clicked.connect(self.addMechanic)
         self.year_edit.editingFinished.connect(self.setYear)
         self.make_edit.editingFinished.connect(self.setMake)
         self.model_edit.editingFinished.connect(self.setModel)
@@ -132,16 +133,10 @@ class NewOrder(QDialog):
         dlg = AddPayment(self)
         dlg.exec_()
 
-    def reassignMechanic(self):
-        id, ok = QInputDialog.getText(self, 'Enter ID', 'Enter your ID.')
-        id = "".join(id.split())    #Clears whitespace from entries
-        id = id.lower()             #Keeps CONFIG_FILE sections safe
-        
-        if self.homepage.getPIN(id):
-            new_mechanic, ok = QInputDialog.getItem(self, 'Reassign mechanic', 'Choose a new mechanic.', self.mechanics, 0, True)
-            self.mechanic_lbl.setText(new_mechanic)
-            self.mechanic = new_mechanic
-            # change mechanic name in database for this work order
+    def addMechanic(self):      
+        new_mechanic, ok = QInputDialog.getItem(self, 'Add mechanic', 'Choose a mechanic.', self.mechanics, 0, True)
+        self.mechanic_lbl.setText(new_mechanic)
+        self.mechanic = new_mechanic
 
     def setYear(self):
         self.year = self.year_edit.text()
@@ -176,6 +171,18 @@ class NewOrder(QDialog):
 
     def dbDisconnect(self):
         self.connection.close()
+        
+class NewBikeOrder(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi(UI_PATH + 'NewBikeOrderDialog.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
+        
+class MerchandiseOrder(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi(UI_PATH + 'MerchandiseOrderDialog.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
 
 class Inventory(QDialog):
     def __init__(self):
@@ -184,16 +191,18 @@ class Inventory(QDialog):
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.new_order_bt.clicked.connect(self.openNewOrder)
         
-    def openNewOrder(self): # open one of the 3 new orders
+        self.type_lbl.setText(random.choice(["Motorcycle", "Part", "Merchandise"])) # temp for testing
+        
+    def openNewOrder(self): # open one of the 3 new orders    
         typeLabel = self.type_lbl.text()
         if (typeLabel == "Motorcycle"):
-            dlg = NewOrder(self)
+            dlg = NewBikeOrder()
             
         if (typeLabel == "Part"):
-            dlg = NewOrder(self) # change later
+            dlg = NewWorkOrder(self)
             
         if (typeLabel == "Merchandise"):
-            dlg = NewOrder(self) # change later
+            dlg = MerchandiseOrder()
         
         dlg.exec_()
 
@@ -281,16 +290,14 @@ class Homepage(QMainWindow):
             dlg.exec_()
 
     def openNewOrder(self):
-        #open NewOrderDialog.ui
-        if self.verifyID():
-            dlg = NewOrder(self)
-            dlg.exec_()
+        #open NewWorkOrderDialog.ui
+        dlg = NewWorkOrder(self)
+        dlg.exec_()
 
     def openInventory(self):
         #open InventoryDialog.ui
-        if self.verifyID():
-            dlg = Inventory()
-            dlg.exec_()
+        dlg = Inventory()
+        dlg.exec_()
 
 def CheckFormatCard(credNum):
     '''for x in range(16):
