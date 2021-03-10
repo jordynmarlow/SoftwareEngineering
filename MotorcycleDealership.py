@@ -27,12 +27,6 @@ class InventoryDatabase():
         return self.cursor.fetchall()
 
     def get_fields(self, item_no, name):
-        """self.cursor.execute('SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE, I.COLOR FROM ProductsInventory I WHERE I.ITEM_NUMBER=%s AND NAME=\'%s\'' % (item_no, name))
-        if len(self.cursor.fetchall()) > 0:
-
-        self.cursor.execute('SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE FROM PartsInventory I WHERE I.ITEM_NUMBER=%s AND NAME=\'%s\'' % (item_no, name))
-        self.cursor.execute('SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE, I.COLOR, I.SIZE FROM MerchandiseInventory I WHERE I.ITEM_NUMBER=%s AND NAME=\'%s\'' % (item_no, name))
-        print(self.cursor.fetchall())"""
         self.cursor.execute('SELECT * FROM \
                                 (SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE, I.COLOR FROM ProductsInventory I UNION\
                                 SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE FROM PartsInventory I UNION\
@@ -46,7 +40,11 @@ class InventoryDatabase():
             if len(self.cursor.fetchall()) > 0:
                 return table
 
-class OrdersDatabase():
+    def get_inventory_items(self, query):
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+
+class OrdersDatabase(): 
     def __init__(self):
         self.cursor = connect_to_db()
     
@@ -136,6 +134,36 @@ class Order(QDialog):
             mechanics = orders.get_mechanics(self.order_id)
             new_mechanic, ok = QInputDialog.getItem(self, 'Reassign Mechanic', 'Choose a new mechanic.', mechanics, 0, True)
 
+class InventoryFilters(QDialog):
+    def __init__(self, homepage):
+        super().__init__()
+        self.homepage = homepage
+        uic.loadUi('FilterInventory.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
+        self.show_items_bt.clicked.connect(self.update_list)
+
+    def update_list(self):
+        cols = 'I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE'
+        merch = 'SELECT %s FROM MerchandiseInventory I' % (cols)
+        parts = 'SELECT %s FROM PartsInventory I' % (cols)
+        bikes = 'SELECT %s FROM ProductsInventory I' % (cols)
+        if self.merch_rb.isChecked():
+            query = merch
+        elif self.parts_rb.isChecked():
+            query = parts
+        elif self.bikes_rb.isChecked():
+            query = bikes
+        else: # all_rb is checked
+            query = 'SELECT * FROM (%s UNION %s UNION %s) I' % (merch, parts, bikes)
+        if self.in_stock_cb.isChecked():
+            query += ' WHERE I.QUANTITY>0'
+        if self.sort_combo.currentIndex() == 1: # sort by price (low to high)
+            query += ' ORDER BY PRICE ASC'
+        elif self.sort_combo.currentIndex() == 2: # sort by price (high to low)
+            query += ' ORDER BY PRICE DESC'
+        self.items = inventory.get_inventory_items(query)
+        self.close()
+
 class Homepage(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -143,6 +171,7 @@ class Homepage(QMainWindow):
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.setWindowTitle('Motorcycle Dealership')
         self.show()
+        self.inventory_filters = InventoryFilters(self)
         self.populateInventoryList()
         self.populateOrdersList()
         self.widgetInteractions()
@@ -152,14 +181,16 @@ class Homepage(QMainWindow):
         self.employees_bt.clicked.connect(self.openEmployees)
         self.ads_bt.clicked.connect(self.openAds)
         self.new_order_bt.clicked.connect(self.openNewOrder)
-        self.inventory_list.itemClicked.connect(self.openInventoryItem)
-        self.orders_list.itemClicked.connect(self.openOrder)
-    
+        #self.inventory_list.itemClicked.connect(self.openInventoryItem)
+        #self.orders_list.itemClicked.connect(self.openOrder)
+        self.filter_inventory_bt.clicked.connect(self.openInventoryFilters)
+
     def populateInventoryList(self):
         self.inventory_list.setVerticalScrollBar(QScrollBar(self))
-        items = inventory.get_all_inventory_items()
-        for item in items:
-            self.inventory_list.addItem(QListWidgetItem(str(item[0]) + '\t\t\t' + item[1]))
+        self.inventory_filters.update_list()
+        self.inventory_list.clear()
+        for item in self.inventory_filters.items:
+            self.inventory_list.addItem(QListWidgetItem(str(item[0]) + '\t' + item[1] + '\t' + str(item[2]) + '\t' + str(item[3])))
     
     def populateOrdersList(self):
         self.orders_list.setVerticalScrollBar(QScrollBar(self))
@@ -167,6 +198,11 @@ class Homepage(QMainWindow):
         items = self.orders.get_all_orders()
         for item in items:
             self.orders_list.addItem(QListWidgetItem('\t\t'.join(item)))
+
+    def openInventoryFilters(self):
+        #open TimeSheetDialog.ui
+        self.inventory_filters.exec_()
+        self.populateInventoryList()
 
     def openTimesheet(self):
         #open TimeSheetDialog.ui
