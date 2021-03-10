@@ -111,7 +111,7 @@ class NewWorkOrder(QDialog):
         uic.loadUi(UI_PATH + 'NewWorkOrderDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_payment_bt.clicked.connect(self.openAddPayment)
-        self.reassign_mechanic_bt.clicked.connect(self.reassignMechanic)
+        self.add_mechanic_bt.clicked.connect(self.addMechanic)
         self.year_edit.editingFinished.connect(self.setYear)
         self.make_edit.editingFinished.connect(self.setMake)
         self.model_edit.editingFinished.connect(self.setModel)
@@ -133,16 +133,10 @@ class NewWorkOrder(QDialog):
         dlg = AddPayment(self)
         dlg.exec_()
 
-    def reassignMechanic(self):
-        id, ok = QInputDialog.getText(self, 'Enter ID', 'Enter your ID.')
-        id = "".join(id.split())    #Clears whitespace from entries
-        id = id.lower()             #Keeps CONFIG_FILE sections safe
-        
-        if self.homepage.getPIN(id):
-            new_mechanic, ok = QInputDialog.getItem(self, 'Reassign mechanic', 'Choose a new mechanic.', self.mechanics, 0, True)
-            self.mechanic_lbl.setText(new_mechanic)
-            self.mechanic = new_mechanic
-            # change mechanic name in database for this work order
+    def addMechanic(self):      
+        new_mechanic, ok = QInputDialog.getItem(self, 'Add mechanic', 'Choose a mechanic.', self.mechanics, 0, True)
+        self.mechanic_lbl.setText(new_mechanic)
+        self.mechanic = new_mechanic
 
     def setYear(self):
         self.year = self.year_edit.text()
@@ -297,15 +291,13 @@ class Homepage(QMainWindow):
 
     def openNewOrder(self):
         #open NewWorkOrderDialog.ui
-        if self.verifyID():
-            dlg = NewWorkOrder(self)
-            dlg.exec_()
+        dlg = NewWorkOrder(self)
+        dlg.exec_()
 
     def openInventory(self):
         #open InventoryDialog.ui
-        if self.verifyID():
-            dlg = Inventory()
-            dlg.exec_()
+        dlg = Inventory()
+        dlg.exec_()
 
 def CheckFormatCard(credNum):
     '''for x in range(16):

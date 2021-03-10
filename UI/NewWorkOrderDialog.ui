@@ -222,7 +222,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="reassign_mechanic_bt">
+  <widget class="QPushButton" name="add_mechanic_bt">
    <property name="geometry">
     <rect>
      <x>330</x>
@@ -232,7 +232,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Reassign Mechanic</string>
+    <string>Add/Change Mechanic</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="make_edit">
