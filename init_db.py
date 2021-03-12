@@ -42,14 +42,21 @@ cursor.execute('insert into MerchandiseInventory (%s) values (\'Alpinestars Ande
 cursor.execute('select * from MerchandiseInventory')
 print(cursor.fetchall())
 
+schema = 'ITEM_NUMBER, DATE, INTEREST_RATE'
 cursor.execute('drop table BikeOrders')
 cursor.execute('create table BikeOrders(ORDER_ID integer primary key autoincrement, ITEM_NUMBER integer, DATE varchar(10), INTEREST_RATE int)')
+cursor.execute('insert into BikeOrders (ORDER_ID, %s) values (48657932, 16753498, \'01/13/2021\', 10)' % (schema))
 
+schema = 'ITEM_NUMBER, DATE, NAME, PHONE, MECHANIC, ARCHIVED'
 cursor.execute('drop table WorkOrders')
 cursor.execute('create table WorkOrders(ORDER_ID integer primary key autoincrement, ITEM_NUMBER integer, DATE varchar(10), NAME varchar(30), PHONE varchar(10), MECHANIC varchar(20), ARCHIVED boolean)')
+cursor.execute('insert into WorkOrders (ORDER_ID, %s) values (64875423, 26973565, \'02/27/2021\', \'Sabrina Young\', \'2438551646\', \'Payton\', TRUE)' % (schema))
+cursor.execute('insert into WorkOrders (%s) values (26973567, \'03/02/2021\', \'Tyler Flores\', \'8643561973\', \'Payton\', FALSE)' % (schema))
 
+schema = 'ITEM_NUMBER, DATE'
 cursor.execute('drop table MerchandiseOrders')
 cursor.execute('create table MerchandiseOrders(ORDER_ID integer primary key autoincrement, ITEM_NUMBER integer, DATE varchar(10))')
+cursor.execute('insert into MerchandiseOrders (ORDER_ID, %s) values (97531024, 34129348, \'02/25/2021\')' % (schema))
 
 cursor.execute('select * from ProductsInventory')
 print(cursor.fetchall())

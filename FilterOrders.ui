@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>311</width>
-    <height>222</height>
+    <height>170</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>190</y>
+     <y>140</y>
      <width>291</width>
      <height>23</height>
     </rect>
@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>60</y>
+     <y>10</y>
      <width>291</width>
      <height>121</height>
     </rect>
@@ -51,7 +51,7 @@
      <item>
       <widget class="QRadioButton" name="all_rb">
        <property name="text">
-        <string>All Products</string>
+        <string>All Orders</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -61,64 +61,26 @@
      <item>
       <widget class="QRadioButton" name="merch_rb">
        <property name="text">
-        <string>Merchandise</string>
+        <string>Merchandise Orders</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QRadioButton" name="bikes_rb">
        <property name="text">
-        <string>Bikes</string>
+        <string>Bike Orders</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="parts_rb">
+      <widget class="QRadioButton" name="work_rb">
        <property name="text">
-        <string>Bike Parts</string>
+        <string>Work Orders</string>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
-  </widget>
-  <widget class="QComboBox" name="sort_combo">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>20</y>
-     <width>171</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>Sort By...</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Price (Low to High)</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Price (High to Low)</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QCheckBox" name="in_stock_cb">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>25</y>
-     <width>101</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>In Stock</string>
-   </property>
   </widget>
  </widget>
  <resources/>

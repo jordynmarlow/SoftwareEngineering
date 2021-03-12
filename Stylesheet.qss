@@ -16,7 +16,7 @@ QPushButton {
     border: none;
     border-radius: 5px;
 }
-QPushButton#filter_inventory_bt, QPushButton#filter_order_bt {
+QPushButton#filter_inventory_bt, QPushButton#filter_orders_bt {
     background-color: #444444;
     color: none;
 }
