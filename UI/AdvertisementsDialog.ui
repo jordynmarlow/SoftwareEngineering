@@ -130,8 +130,8 @@
   <widget class="QPushButton" name="filter_advertisements_bt">
    <property name="geometry">
     <rect>
-     <x>400</x>
-     <y>50</y>
+     <x>380</x>
+     <y>100</y>
      <width>160</width>
      <height>31</height>
     </rect>
