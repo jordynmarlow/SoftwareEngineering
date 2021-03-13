@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MotorcycleDealership</class>
- <widget class="QMainWindow" name="MotorcycleDealership">
+ <class>merging</class>
+ <widget class="QMainWindow" name="merging">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -254,6 +254,45 @@ color: black;</string>
      <string>Temp Inventory</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="add_product_bt">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>50</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add Product</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="add_part_bt">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>50</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add Part</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="add_merch_bt">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>50</y>
+      <width>151</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add Merchandise</string>
+    </property>
+   </widget>
    <zorder>widget</zorder>
    <zorder>filter_inventory_bt</zorder>
    <zorder>new_order_bt</zorder>
@@ -262,6 +301,9 @@ color: black;</string>
    <zorder>inventory_scroll_area</zorder>
    <zorder>filter_order_bt</zorder>
    <zorder>temp_inv_bt</zorder>
+   <zorder>add_product_bt</zorder>
+   <zorder>add_part_bt</zorder>
+   <zorder>add_merch_bt</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
