@@ -638,16 +638,15 @@ class Homepage(QMainWindow):
         while ok:
             try:
                 id_list[id]  # If a user's section exists, we can move on to asking for a password
-                break
+                if ok:
+                    return self.getPIN(id), id
+                else:
+                    return False, ""  # No reason to ask for PIN if user stops entering ID
             except:  # If a user's section does not exist, we can ask if they would like to add it before requesting re-entry
                 id, ok = QInputDialog.getText(self, 'Enter Name',
                                               'Enter your name.\nRemember you have to enter it the same way every time.')
                 if self.addNewID(id):
                     return True, id
-        if ok:
-            return self.getPIN(id), id
-        else:
-            return False, ""  # No reason to ask for PIN if user stops entering ID
 
     def getPIN(self, id):  # Ensures that any PIN being entered is valid
         pin, ok = QInputDialog.getText(self, 'Enter PIN', 'Enter PIN for ' + id + ":")
@@ -681,7 +680,7 @@ class Homepage(QMainWindow):
 
     def openEmployees(self):
         # open EmployeesDialog.ui
-        if self.verifyID():
+        if self.getPIN('manager'):
             dlg = Employees()
             dlg.exec_()
 

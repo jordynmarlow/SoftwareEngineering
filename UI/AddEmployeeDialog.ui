@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>merge_conflict</class>
- <widget class="QDialog" name="merge_conflict">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>250</y>
+     <x>480</x>
+     <y>420</y>
      <width>81</width>
      <height>51</height>
     </rect>

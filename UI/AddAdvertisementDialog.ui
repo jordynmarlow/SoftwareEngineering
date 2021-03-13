@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>merge_conflict</class>
- <widget class="QDialog" name="merge_conflict">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -94,8 +94,8 @@
   <widget class="QLineEdit" name="name_edit">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>70</y>
+     <x>80</x>
+     <y>50</y>
      <width>141</width>
      <height>31</height>
     </rect>
