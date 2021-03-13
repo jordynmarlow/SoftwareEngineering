@@ -1,4 +1,4 @@
-# #57
+# #82,#83
 import sys, configparser
 from PyQt5 import uic
 from PyQt5.QtCore import *
@@ -23,10 +23,16 @@ class Employees(QDialog):
         uic.loadUi(UI_PATH + 'EmployeesDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_employee_bt.clicked.connect(self.openAddEmployees)
+        self.temp_employee_bt.clicked.connect(self.openSingleEmployee)
 
     def openAddEmployees(self):
         #open AddEmployeeDialog.ui
         dlg = AddEmployee()
+        dlg.exec_()
+        
+    def openSingleEmployee(self):
+        #open SingleEmployeeDialog.ui
+        dlg = SingleEmployee()
         dlg.exec_()
 
 class AddEmployee(QDialog):
@@ -38,21 +44,37 @@ class AddEmployee(QDialog):
         self.status_edit.selectionChanged.connect(self.setStatus)
         self.name_edit.selectionChanged.connect(self.setName)
         self.position_edit.selectionChanged.connect(self.setPosition)
-        self.employee_id = ""
+        # self.phone_edit.selectionChanged.connect(self.setPhone)
+        # self.address_edit.selectionChanged.connect(self.setAddress)
+        # self.salary_edit.selectionChanged.connect(self.setSalary)
+        # self.comments_edit.selectionChanged.connect(self.setComments)
+        self.employee_id_edit = ""
         for x in range(6):
-            self.employee_id += str(randint(0,9))
+            self.employee_id_edit += str(randint(0,9))
 
         self.accepted.connect(self.confirm)
         self.rejected.connect(self.dbDisconnect)
 
     def setStatus(self):
-        self.status = self.status_edit.toPlainText()
+        self.status = self.status_edit.text()
 
     def setName(self):
-        self.name = self.name_edit.toPlainText()
+        self.name = self.name_edit.text()
 
     def setPosition(self):
-        self.position = self.position_edit.toPlainText()
+        self.position = self.position_edit.text()
+        
+    # def setPhone(self):
+    #     self.phone = self.phone_edit.text()
+
+    # def setAddress(self):
+    #     self.address = self.address_edit.text()
+
+    # def setSalary(self):
+    #     self.salary = self.salary_edit.text()
+        
+    # def setComments(self):
+    #     self.comments = self.comments_edit.toPlainText()
 
     def confirm(self):
         db_ops.add_employee(self.connection, self.employee_id, self.name, self.position, self.status)
@@ -61,23 +83,158 @@ class AddEmployee(QDialog):
     def dbDisconnect(self):
         self.connection.close()
 
+class SingleEmployee(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi(UI_PATH + 'SingleEmployeeDialog.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
+        self.edit_employee_bt.clicked.connect(self.openEditEmployee)
+    
+    def openEditEmployee(self):
+        #open EditEmployeeDialog.ui
+        dlg = EditEmployee()
+        dlg.exec_()
+
+    
+class EditEmployee(QDialog):
+    def __init__(self):
+        super().__init__()
+        # self.connection = db_ops.connect_db('MotorDB.db')
+        uic.loadUi(UI_PATH + 'EditEmployeeDialog.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
+        
+        # pull from database to the labels first
+        
+        
+        # send edit changes to database
+        # self.status_edit.selectionChanged.connect(self.setStatus)
+        # self.name_edit.selectionChanged.connect(self.setName)
+        # self.position_edit.selectionChanged.connect(self.setPosition)
+        # self.phone_edit.selectionChanged.connect(self.setPhone)
+        # self.address_edit.selectionChanged.connect(self.setAddress)
+        # self.salary_edit.selectionChanged.connect(self.setSalary)
+        # self.comments_edit.selectionChanged.connect(self.setComments)
+        
+        # send employee ID too?
+
+        # self.accepted.connect(self.confirm)
+        # self.rejected.connect(self.dbDisconnect)
+
+    # def setStatus(self):
+    #     self.status = self.status_edit.text()
+
+    # def setName(self):
+    #     self.name = self.name_edit.text()
+
+    # def setPosition(self):
+    #     self.position = self.position_edit.text()
+        
+    # def setPhone(self):
+    #     self.phone = self.phone_edit.text()
+
+    # def setAddress(self):
+    #     self.address = self.address_edit.text()
+
+    # def setSalary(self):
+    #     self.salary = self.salary_edit.text()
+        
+    # def setComments(self):
+    #     self.comments = self.comments_edit.toPlainText()
+
 class Advertisements(QDialog):
     def __init__(self):
         super().__init__()
         uic.loadUi(UI_PATH + 'AdvertisementsDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.add_advertisement_bt.clicked.connect(self.openAddAdvertisements)
+        self.temp_advert_bt.clicked.connect(self.openSingleAdvertisement)
 
     def openAddAdvertisements(self):
         #open AddAdvertisementDialog.ui
         dlg = AddAdvertisements()
         dlg.exec_()
+        
+    def openSingleAdvertisement(self):
+        #open SingleAdvertisementDialog.ui
+        dlg = SingleAdvertisement()
+        dlg.exec_()
 
 class AddAdvertisements(QDialog):
     def __init__(self):
         super().__init__()
+        # self.connection = db_ops.connect_db('MotorDB.db')
         uic.loadUi(UI_PATH + 'AddAdvertisementDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
+        # self.status_edit.selectionChanged.connect(self.setStatus)
+        # self.name_edit.selectionChanged.connect(self.setName)
+        # self.type_edit.selectionChanged.connect(self.setType)
+        # self.cost_edit.selectionChanged.connect(self.setCost)
+        # self.description_edit.selectionChanged.connect(self.setDescription)
+
+        # self.accepted.connect(self.confirm)
+        # self.rejected.connect(self.dbDisconnect)
+        
+    # def setStatus(self):
+    #     self.status = self.status_edit.text()
+
+    # def setName(self):
+    #     self.name = self.name_edit.text()
+
+    # def setType(self):
+    #     self.type = self.type_edit.text()
+        
+    # def setCost(self):
+    #     self.cost = self.cost_edit.text()
+        
+    # def setDesription(self):
+    #     self.description = self.description_edit.toPlainText()
+    
+class SingleAdvertisement(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi(UI_PATH + 'SingleAdvertisementDialog.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
+        self.edit_advertisement_bt.clicked.connect(self.openEditAdvertisement)
+    
+    def openEditAdvertisement(self):
+        #open EditAdvertisementDialog.ui
+        dlg = EditAdvertisement()
+        dlg.exec_()
+    
+class EditAdvertisement(QDialog):
+    def __init__(self):
+        super().__init__()
+        # self.connection = db_ops.connect_db('MotorDB.db')
+        uic.loadUi(UI_PATH + 'EditAdvertisementDialog.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
+        
+        # pull from database to the labels first
+        
+        # send edit changes to the database
+        # self.status_edit.selectionChanged.connect(self.setStatus)
+        # self.name_edit.selectionChanged.connect(self.setName)
+        # self.type_edit.selectionChanged.connect(self.setType)
+        # self.cost_edit.selectionChanged.connect(self.setCost)
+        # self.description_edit.selectionChanged.connect(self.setDescription)
+
+        # self.accepted.connect(self.confirm)
+        # self.rejected.connect(self.dbDisconnect)
+        
+    # def setStatus(self):
+    #     self.status = self.status_edit.text()
+
+    # def setName(self):
+    #     self.name = self.name_edit.text()
+
+    # def setType(self):
+    #     self.type = self.type_edit.text()
+        
+    # def setCost(self):
+    #     self.cost = self.cost_edit.text()
+        
+    # def setDesription(self):
+    #     self.description = self.description_edit.toPlainText()
+        
 
 class AddPayment(QDialog): # possibly in openAddPayment functions from new orders, send in the price as well (Phil)
     def __init__(self, orderPage):

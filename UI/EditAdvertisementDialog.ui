@@ -78,7 +78,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Add Advertisement</string>
+    <string>Edit Advertisement</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="status_edit">

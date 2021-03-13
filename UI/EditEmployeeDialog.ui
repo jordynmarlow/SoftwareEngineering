@@ -124,7 +124,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Add Employee</string>
+    <string>Edit Employee</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="position_edit">

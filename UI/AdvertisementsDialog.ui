@@ -114,19 +114,6 @@
     <string>Archive Advertisement</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="edit_advertisement_bt">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>250</y>
-     <width>160</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Edit Advertisement</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="filter_advertisements_bt">
    <property name="geometry">
     <rect>
@@ -164,6 +151,19 @@
    </property>
    <property name="text">
     <string>Type</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="temp_advert_bt">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>300</y>
+     <width>160</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Temp Advertisement</string>
    </property>
   </widget>
  </widget>

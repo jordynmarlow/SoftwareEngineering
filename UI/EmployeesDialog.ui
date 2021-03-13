@@ -49,19 +49,6 @@
     <string>Add Employee</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="edit_employee_bt">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>260</y>
-     <width>141</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Edit Employee</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="delete_employee_bt">
    <property name="geometry">
     <rect>
@@ -151,6 +138,19 @@
    </property>
    <property name="text">
     <string>Position</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="temp_employee_bt">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>290</y>
+     <width>160</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Temp Employee</string>
    </property>
   </widget>
  </widget>
