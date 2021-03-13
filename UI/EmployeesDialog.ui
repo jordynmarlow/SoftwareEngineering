@@ -34,6 +34,19 @@
       <height>389</height>
      </rect>
     </property>
+    <widget class="QPushButton" name="filter_employees_bt">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>30</y>
+       <width>141</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Filter</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QPushButton" name="add_employee_bt">
@@ -73,19 +86,6 @@
    </property>
    <property name="text">
     <string>Employee List</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="filter_employees_bt">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>60</y>
-     <width>141</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Filter</string>
    </property>
   </widget>
   <widget class="QPushButton" name="archive_employee_bt">
