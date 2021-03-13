@@ -113,13 +113,13 @@ def add_merchandise(connection, item_number, name, color, size, price, quantity,
 
 # Function to add work order
 # Arguments include the connection object and fields corresponding to required database columns
-def add_work_order(connection, order_id, start_date, end_date, customer_first, customer_last, phone_number, mechanic, comments, archived):
+def add_work_order(connection, order_id, item_number, start_date, end_date, customer_first, customer_last, phone_number, mechanic, comments, archived):
     # Uses the connection object to execute an insertion. Important: arguments used in VALUES need to be strings inside
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
     connection.execute(
-        "INSERT INTO WorkOrders (DATE,ORDER_ID,CUSTOMER_FIRST,CUSTOMER_LAST,PHONE_NUMBER,MECHANIC,COMMENTS,ARCHIVED) "
-        "VALUES ('%s','%s','%s','%s','%s','%s','%s','%s')" % (order_id, start_date, customer_first, customer_last,
-                                                              phone_number, mechanic, comments, archived))
+        "INSERT INTO WorkOrders (ORDER_ID,ITEM_NUMBER,START_DATE,END_DATE,CUSTOMER_FIRST,CUSTOMER_LAST,PHONE_NUMBER,"
+        "MECHANIC,COMMENTS,ARCHIVED) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"
+        % (order_id, item_number, start_date, end_date, customer_first, customer_last, phone_number, mechanic, comments, archived))
 
     connection.commit()  # Commit the changes made to the database. Won't save without this.
     print("Work order added!")  # Send the message confirming work order addition to database.
@@ -127,11 +127,14 @@ def add_work_order(connection, order_id, start_date, end_date, customer_first, c
 
 # Function to add bike order
 # Arguments include the connection object and fields corresponding to required database columns
-def add_bike_order(connection, item_number, date, interest_rate, archived):
+def add_bike_order(connection, order_id, item_number, make, model, year, name, color, customer_first, customer_last, phone_number, date, interest_rate, comments, archived):
     # Uses the connection object to execute an insertion. Important: arguments used in VALUES need to be strings inside
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
-    connection.execute("INSERT INTO BikeOrders (DATE,ITEM_NUMBER,INTEREST_RATE,ARCHIVED) VALUES "
-                       "('%s','%s','%s','%s')" % (date, item_number, interest_rate, archived))
+    connection.execute("INSERT INTO BikeOrders (ORDER_ID,ITEM_NUMBER,MAKE,MODEL,YEAR,NAME,COLOR,CUSTOMER_FIRST,CUSTOMER_LAST,PHONE_NUMBER,DATE,"
+                       "INTEREST_RATE,COMMENTS,ARCHIVED) VALUES "
+                       "('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"
+                       % (order_id, item_number, make, model, year, name, color, customer_first, customer_last,
+                          phone_number, date, interest_rate, comments, archived))
 
     connection.commit()  # Commit the changes made to the database. Won't save without this.
     print("Bike order added!")  # Send the message confirming bike order addition to database.
@@ -139,11 +142,11 @@ def add_bike_order(connection, item_number, date, interest_rate, archived):
 
 # Function to add merchandise order
 # Arguments include the connection object and fields corresponding to required database columns
-def add_merchandise_order(connection, item_number, date, archived):
+def add_merchandise_order(connection, order_id, item_number, item_type, color, size, quantity, date, comments, archived):
     # Uses the connection object to execute an insertion. Important: arguments used in VALUES need to be strings inside
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
-    connection.execute("INSERT INTO MerchandiseOrders (DATE,ITEM_NUMBER,ARCHIVED) VALUES "
-                       "('%s','%s','%s')" % (date, item_number, archived))
+    connection.execute("INSERT INTO MerchandiseOrders (ORDER_ID,ITEM_NUMBER,ITEM_TYPE,COLOR,SIZE,QUANTITY,DATE,COMMENTS,ARCHIVED) VALUES "
+                       "('%s','%s','%s','%s','%s','%s','%s','%s','%s')" % (order_id, item_number, item_type, color, size, quantity, date, comments, archived))
 
     connection.commit()  # Commit the changes made to the database. Won't save without this.
     print("Merch order added!")  # Send the message confirming merchandise order addition to database.
