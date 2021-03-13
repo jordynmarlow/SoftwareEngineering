@@ -124,7 +124,7 @@
     <string>Cost</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="cost_edit">
+  <widget class="QLineEdit" name="why_doesnt_this_cause_merge_conflict">
    <property name="geometry">
     <rect>
      <x>320</x>
