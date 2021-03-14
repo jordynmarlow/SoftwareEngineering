@@ -21,8 +21,8 @@ color: black;</string>
    <widget class="QPushButton" name="filter_inventory_bt">
     <property name="geometry">
      <rect>
-      <x>680</x>
-      <y>45</y>
+      <x>700</x>
+      <y>50</y>
       <width>31</width>
       <height>23</height>
      </rect>
