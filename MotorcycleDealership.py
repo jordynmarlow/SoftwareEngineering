@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import *
 from random import *
 from sqlite3 import Error
 
-
 sql_connection = None
 
 def connect_to_db():
