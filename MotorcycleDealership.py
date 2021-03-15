@@ -1,7 +1,4 @@
-# main
-import sys, configparser
-# merging
-import sys, sqlite3
+import sys, sqlite3, configparser
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -13,9 +10,11 @@ import db_ops
 CONFIG_FILE = 'config.ini'
 UI_PATH = './UI/'
 
+sql_connection = None
+
 def connect_to_db():
     try:
-        sql_connection = sqlite3.connect('database.db')  # Try to connect to the database
+        sql_connection = sqlite3.connect('MotorDB.db')  # Try to connect to the database
     except Error as e:  # ...Except if there is an sqlite3 error,
         print(e)  # print the error
     return sql_connection.cursor()
@@ -26,11 +25,11 @@ class InventoryDatabase():
 
     def get_fields(self, item_no):
         if item_no[0] == 'M': # merchandise item
-            self.cursor.execute('SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE, I.COLOR, I.SIZE FROM MerchandiseInventory I WHERE I.ITEM_NUMBER=%s' % (item_no))
+            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR, I.SIZE FROM MerchandiseInventory I WHERE I.ITEM_NUMBER=%s' % (item_no))
         elif item_no[0] == 'B': # bike item
-            self.cursor.execute('SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE, I.COLOR FROM ProductsInventory I WHERE I.ITEM_NUMBER=%s' % (item_no))
+            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR FROM ProductsInventory I WHERE I.ITEM_NUMBER=%s' % (item_no))
         elif item_no[0] == 'P': # parts item
-            self.cursor.execute('SELECT I.ITEM_NUMBER, I.NAME, I.QUANTITY, I.PRICE FROM PartsInventory I WHERE I.ITEM_NUMBER=%s' % (item_no))
+            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE FROM PartsInventory I WHERE I.ITEM_NUMBER=%s' % (item_no))
         return self.cursor.fetchall()
 
     def get_inventory_items(self, query):
@@ -64,7 +63,6 @@ class Timesheet(QDialog):
         uic.loadUi(UI_PATH + 'TimesheetDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
 
-
 class Employees(QDialog):
     def __init__(self):
         super().__init__()
@@ -82,7 +80,6 @@ class Employees(QDialog):
         #open SingleEmployeeDialog.ui
         dlg = SingleEmployee()
         dlg.exec_()
-
 
 class AddEmployee(QDialog):
     def __init__(self):
@@ -143,8 +140,7 @@ class SingleEmployee(QDialog):
         #open EditEmployeeDialog.ui
         dlg = EditEmployee()
         dlg.exec_()
-
-    
+   
 class EditEmployee(QDialog):
     def __init__(self):
         super().__init__()
@@ -208,7 +204,6 @@ class Advertisements(QDialog):
         dlg = SingleAdvertisement()
         dlg.exec_()
 
-
 class AddAdvertisements(QDialog):
     def __init__(self):
         super().__init__()
@@ -251,12 +246,16 @@ class SingleAdvertisement(QDialog):
         dlg = EditAdvertisement()
         dlg.exec_()
     
-class EditAdvertisement(QDialog):
-    def populateFields(self, fields):
-        # populate description_lbl in InventoryDialog.ui
-        print(fields)
-
 class Order(QDialog):
+    def populateFields(labels, values):
+        self.name_lbl.setText(values[0])
+        labels = ['Name', 'Item Number', 'Quantity', 'Price', 'Color', 'Size']
+        desc = ''
+        for i in range(1, len(values)):
+            desc += labels[i] + ': ' + values[i] + '\n'
+        self.description_lbl.setText(desc)
+
+class EditAdvertisement(QDialog):
     def __init__(self):
         super().__init__()
         # self.connection = db_ops.connect_db('MotorDB.db')
@@ -290,7 +289,6 @@ class Order(QDialog):
     # def setDesription(self):
     #     self.description = self.description_edit.toPlainText()
         
-
 class AddPayment(QDialog): # possibly in openAddPayment functions from new orders, send in the price as well (Phil)
     def __init__(self, orderPage):
         super().__init__()
@@ -313,14 +311,12 @@ class AddPayment(QDialog): # possibly in openAddPayment functions from new order
             self.message_lbl.setText("Wrong format for Credit Card or SSN! Please double check them and try again.")
             self.interest_rate_lbl.setText("")
 
-
 class NewWorkOrder(QDialog):
     def __init__(self, homepage):
         super().__init__()
         self.homepage = homepage
         uic.loadUi(UI_PATH + 'NewWorkOrderDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
-
         self.connection = db_ops.connect_db('MotorDB.db')
         self.cursor = self.connection.cursor()
         self.cursor.execute("SELECT GROUP_CONCAT(NAME) FROM Employees WHERE POSITION = 'Mechanic'")
@@ -380,7 +376,6 @@ class NewWorkOrder(QDialog):
 
     def dbDisconnect(self):
         self.connection.close()
-
 
 class NewBikeOrder(QDialog):
     def __init__(self, homepage):
@@ -450,7 +445,6 @@ class NewBikeOrder(QDialog):
     def dbDisconnect(self):
         self.connection.close()
 
-
 class MerchandiseOrder(QDialog):
     def __init__(self, homepage):
         super().__init__()
@@ -498,15 +492,24 @@ class MerchandiseOrder(QDialog):
     def dbDisconnect(self):
         self.connection.close()
 
-
 class Inventory(QDialog):
     def __init__(self):
         super().__init__()
         uic.loadUi(UI_PATH + 'InventoryDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.new_order_bt.clicked.connect(self.openNewOrder)
-
-        self.type_lbl.setText(random.choice(["Motorcycle", "Part", "Merchandise"]))  # temp for testing
+    
+    #I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR, I.SIZE
+    #I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR
+    #I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE
+    def populateFields(self, values):
+        print(values)
+        self.name_lbl.setText(values[0])
+        labels = ['Name', 'Item Number', 'Quantity', 'Price', 'Color', 'Size']
+        desc = ''
+        for i in range(1, len(values)):
+            desc += labels[i] + ': ' + values[i] + '\n'
+        self.description_lbl.setText(desc)
 
     def openNewOrder(self):  # open one of the 3 new orders
         typeLabel = self.type_lbl.text()
@@ -668,7 +671,7 @@ class InventoryFilters(QDialog):
     def __init__(self, homepage):
         super().__init__()
         self.homepage = homepage
-        uic.loadUi('FilterInventory.ui', self)
+        uic.loadUi(UI_PATH + 'FilterInventory.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.show_items_bt.clicked.connect(self.update_list)
 
@@ -698,7 +701,7 @@ class OrderFilters(QDialog):
     def __init__(self, homepage):
         super().__init__()
         self.homepage = homepage
-        uic.loadUi('FilterOrders.ui', self)
+        uic.loadUi(UI_PATH + 'FilterOrders.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.show_items_bt.clicked.connect(self.update_list)
     
@@ -724,7 +727,7 @@ class Homepage(QMainWindow):
         uic.loadUi(UI_PATH + 'MotorcycleDealership.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.setWindowTitle('Motorcycle Dealership')
-        self.show()
+        #self.show()
         self.inventory_filters = InventoryFilters(self)
         self.order_filters = OrderFilters(self)
         self.populateInventoryList()
@@ -737,13 +740,21 @@ class Homepage(QMainWindow):
         self.ads_bt.clicked.connect(self.openAds)
         self.new_order_bt.clicked.connect(self.openNewOrder)
         self.change_pin_bt.clicked.connect(self.changePIN)
-        self.add_product_bt.clicked.connect(self.openNewProduct)
-        self.add_part_bt.clicked.connect(self.openNewPart)
-        self.add_merch_bt.clicked.connect(self.openNewMerch)
+        self.add_item_bt.clicked.connect(self.addItem)
         self.inventory_list.itemClicked.connect(self.openInventoryItem)
         self.orders_list.itemClicked.connect(self.openOrder)
         self.filter_inventory_bt.clicked.connect(self.openInventoryFilters)
         self.filter_orders_bt.clicked.connect(self.openOrderFilters)
+
+    def addItem(self):
+        items = ['Bike', 'Part', 'Merchandise']
+        item, ok = QInputDialog(self, 'Add Inventory Item', 'Select item type: ', items, 0, False)
+        if item == 'Bike':
+            self.openNewProduct
+        elif item == 'Part':
+            self.openNewPart
+        else: # item == 'Merchandise'
+            self.openNewMerch
 
     def populateInventoryList(self):
         self.inventory_list.setVerticalScrollBar(QScrollBar(self))
@@ -758,8 +769,6 @@ class Homepage(QMainWindow):
         self.orders_list.clear()
         for item in self.order_filters.items:
             self.orders_list.addItem(QListWidgetItem(str(item[0]) + '\t\t' + item[1]))
-
-        self.temp_inv_bt.clicked.connect(self.openInventory)
         # when a widget in inventory_scroll_area is clicked, connect to self.openInventory
 
     def addNewID(self, id):  # Allows new users to be added. Outside of #51 scope.
@@ -840,11 +849,12 @@ class Homepage(QMainWindow):
         dlg = NewWorkOrder(self)
         dlg.exec_()
 
-    def openInventory(self):
+    def openInventoryItem(self, item):
         # open InventoryDialog.ui
         dlg = Inventory()
         item_no = item.text().split('\t')[0]
-        dlg.populateFields(inventory.get_fields(item_no))
+        values = inventory.get_fields(item_no)
+        dlg.populateFields(values)
         dlg.exec_()
 
     def openNewProduct(self):
