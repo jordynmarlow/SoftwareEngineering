@@ -6,57 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>579</width>
+    <width>559</width>
     <height>489</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QPushButton" name="delete_advertisement_bt">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>410</y>
-     <width>160</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Delete Advertisement</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>111</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Advertisement List</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>290</x>
-     <y>30</y>
-     <width>61</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>View Count</string>
-   </property>
-  </widget>
   <widget class="QScrollArea" name="scrollArea">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>50</y>
+     <y>60</y>
      <width>371</width>
      <height>391</height>
     </rect>
@@ -75,24 +36,63 @@
     </property>
    </widget>
   </widget>
-  <widget class="QPushButton" name="add_advertisement_bt">
+  <widget class="QPushButton" name="add_employee_bt">
    <property name="geometry">
     <rect>
      <x>400</x>
-     <y>150</y>
-     <width>160</width>
+     <y>160</y>
+     <width>141</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Add Advertisement</string>
+    <string>Add Employee</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="delete_employee_bt">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>420</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Delete Employee</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Employee List</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="archive_employee_bt">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>210</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Archive Employee</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>30</y>
+     <x>100</x>
+     <y>40</y>
      <width>47</width>
      <height>13</height>
     </rect>
@@ -101,50 +101,11 @@
     <string>Name</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="archive_advertisement_bt">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>200</y>
-     <width>160</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Archive Advertisement</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="edit_advertisement_bt">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>250</y>
-     <width>160</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Edit Advertisement</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="filter_advertisements_bt">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>50</y>
-     <width>160</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Filter</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>30</y>
+     <x>20</x>
+     <y>40</y>
      <width>47</width>
      <height>13</height>
     </rect>
@@ -153,17 +114,43 @@
     <string>Status</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_6">
+  <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>30</y>
+     <x>250</x>
+     <y>40</y>
      <width>47</width>
      <height>13</height>
     </rect>
    </property>
    <property name="text">
-    <string>Type</string>
+    <string>Position</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="temp_employee_bt">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>290</y>
+     <width>160</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Temp Employee</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="filter_employees_bt">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>60</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Filter</string>
    </property>
   </widget>
  </widget>

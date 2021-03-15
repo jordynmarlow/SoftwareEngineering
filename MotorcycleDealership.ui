@@ -21,8 +21,8 @@ color: black;</string>
    <widget class="QPushButton" name="filter_inventory_bt">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>60</y>
+      <x>680</x>
+      <y>45</y>
       <width>31</width>
       <height>23</height>
      </rect>
@@ -159,7 +159,7 @@ color: black;</string>
      <string notr="true"/>
     </property>
    </widget>
-   <widget class="QPushButton" name="filter_orders_bt">
+   <widget class="QPushButton" name="filter_order_bt">
     <property name="geometry">
      <rect>
       <x>1030</x>
@@ -200,7 +200,7 @@ color: black;</string>
    <zorder>filter_inventory_bt</zorder>
    <zorder>new_order_bt</zorder>
    <zorder>horizontalLayoutWidget</zorder>
-   <zorder>filter_orders_bt</zorder>
+   <zorder>filter_order_bt</zorder>
    <zorder>inventory_list</zorder>
    <zorder>orders_list</zorder>
   </widget>
