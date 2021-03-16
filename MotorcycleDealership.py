@@ -25,11 +25,11 @@ class InventoryDatabase():
 
     def get_fields(self, item_no):
         if item_no[0] == 'M': # merchandise item
-            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR, I.SIZE FROM MerchandiseInventory I WHERE I.ITEM_NUMBER=%s' % (item_no))
+            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR, I.SIZE FROM MerchandiseInventory I WHERE I.ITEM_NUMBER=\'%s\'' % (item_no))
         elif item_no[0] == 'B': # bike item
-            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR FROM ProductsInventory I WHERE I.ITEM_NUMBER=%s' % (item_no))
+            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR FROM ProductsInventory I WHERE I.ITEM_NUMBER=\'%s\'' % (item_no))
         elif item_no[0] == 'P': # parts item
-            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE FROM PartsInventory I WHERE I.ITEM_NUMBER=%s' % (item_no))
+            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE FROM PartsInventory I WHERE I.ITEM_NUMBER=\'%s\'' % (item_no))
         return self.cursor.fetchall()
 
     def get_inventory_items(self, query):
@@ -42,11 +42,11 @@ class OrdersDatabase():
     
     def get_fields(self, order_id):
         if order_id[0] == 'M': # merchandise order
-            self.cursor.execute('SELECT O.ORDER_ID, O.DATE, O.PRICE, O.ITEM_NAME, O.SIZE, O.COLOR FROM MerchandiseOrders O WHERE O.ORDER_ID=%s' % (order_id))
+            self.cursor.execute('SELECT O.ORDER_ID, O.DATE, O.SIZE, O.COLOR FROM MerchandiseOrders O WHERE O.ORDER_ID=\'%s\'' % (order_id))
         elif order_id[0] == 'B': # bike order
-            self.cursor.execute('SELECTO.ORDER_ID, O.DATE, O.PRICE, O.ITEM_NAME, O.INTEREST_RATE, O.COLOR FROM BikeOrders O WHERE O.ORDER_ID=%s' % (order_id))
+            self.cursor.execute('SELECT O.ORDER_ID, O.NAME, O.DATE, O.INTEREST_RATE, O.COLOR FROM BikeOrders O WHERE O.ORDER_ID=\'%s\'' % (order_id))
         elif order_id[0] == 'P': # parts order
-            self.cursor.execute('SELECT O.ORDER_ID, O.DATE, O.PRICE, O.ITEM_NAME, O.NAME, O.PHONE, O.MECHANIC FROM WorkOrders O WHERE O.ORDER_ID=%s' % (order_id))
+            self.cursor.execute('SELECT O.ORDER_ID, O.DATE, O.CUSTOMER_FIRST, O.CUSTOMER_LAST, O.PHONE_NUMBER, O.MECHANIC FROM WorkOrders O WHERE O.ORDER_ID=\'%s\'' % (order_id))
         return self.cursor.fetchall()
 
     def get_mechanics(order_id):
@@ -247,12 +247,16 @@ class SingleAdvertisement(QDialog):
         dlg.exec_()
     
 class Order(QDialog):
-    def populateFields(labels, values):
-        self.name_lbl.setText(values[0])
-        labels = ['Name', 'Item Number', 'Quantity', 'Price', 'Color', 'Size']
+    def __init__(self):
+        super().__init__()
+        uic.loadUi(UI_PATH + 'OrderDialog.ui', self)
+        self.setStyleSheet(open('Stylesheet.qss').read())
+
+    def populateFields(self, values):
+        labels = ['Item Number', 'Quantity', 'Price', 'Color', 'Size']
         desc = ''
-        for i in range(1, len(values)):
-            desc += labels[i] + ': ' + values[i] + '\n'
+        for i in range(0, len(values[0])):
+            desc += labels[i] + ': ' + values[0][i] + '\n'
         self.description_lbl.setText(desc)
 
 class EditAdvertisement(QDialog):
@@ -504,12 +508,12 @@ class Inventory(QDialog):
     #I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE
     def populateFields(self, values):
         print(values)
-        self.name_lbl.setText(values[0])
+        self.name_lbl.setText(values[0][0])
         labels = ['Name', 'Item Number', 'Quantity', 'Price', 'Color', 'Size']
         desc = ''
-        for i in range(1, len(values)):
-            desc += labels[i] + ': ' + values[i] + '\n'
-        self.description_lbl.setText(desc)
+        for i in range(1, len(values[0])):
+            desc += labels[i] + ': ' + values[0][i] + '\n'
+        self.description_lbl.setText(QString(desc))
 
     def openNewOrder(self):  # open one of the 3 new orders
         typeLabel = self.type_lbl.text()
@@ -748,13 +752,13 @@ class Homepage(QMainWindow):
 
     def addItem(self):
         items = ['Bike', 'Part', 'Merchandise']
-        item, ok = QInputDialog(self, 'Add Inventory Item', 'Select item type: ', items, 0, False)
+        item, ok = QInputDialog.getItem(self, 'Add Inventory Item', 'Select item type: ', items, 0, False)
         if item == 'Bike':
-            self.openNewProduct
+            self.openNewProduct()
         elif item == 'Part':
-            self.openNewPart
+            self.openNewPart()
         else: # item == 'Merchandise'
-            self.openNewMerch
+            self.openNewMerch()
 
     def populateInventoryList(self):
         self.inventory_list.setVerticalScrollBar(QScrollBar(self))

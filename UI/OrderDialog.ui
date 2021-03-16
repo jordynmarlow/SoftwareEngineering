@@ -13,30 +13,17 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="name_lbl">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>501</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>[item name]</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="description_lbl">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>60</y>
+     <y>20</y>
      <width>361</width>
-     <height>201</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="text">
-    <string>[item description]</string>
+    <string>[order description]</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -49,7 +36,7 @@
    <property name="geometry">
     <rect>
      <x>410</x>
-     <y>110</y>
+     <y>20</y>
      <width>121</width>
      <height>23</height>
     </rect>
