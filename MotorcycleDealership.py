@@ -445,35 +445,47 @@ class Advertisements(QDialog):
         dlg = SingleAdvertisement()
         dlg.exec_()
 
+
 class AddAdvertisements(QDialog):
     def __init__(self):
         super().__init__()
-        # self.connection = db_ops.connect_db('MotorDB.db')
         uic.loadUi(UI_PATH + 'AddAdvertisementDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
-        # self.status_edit.selectionChanged.connect(self.setStatus)
-        # self.name_edit.selectionChanged.connect(self.setName)
-        # self.type_edit.selectionChanged.connect(self.setType)
-        # self.cost_edit.selectionChanged.connect(self.setCost)
-        # self.description_edit.selectionChanged.connect(self.setDescription)
 
-        # self.accepted.connect(self.confirm)
-        # self.rejected.connect(self.dbDisconnect)
-        
-    # def setStatus(self):
-    #     self.status = self.status_edit.text()
+        self.connection = db_ops.connect_db('MotorDB.db')
+        self.status_edit.selectionChanged.connect(self.setStatus)
+        self.name_edit.selectionChanged.connect(self.setName)
+        self.type_edit.selectionChanged.connect(self.setType)
+        self.cost_edit.selectionChanged.connect(self.setCost)
+        self.description_edit.selectionChanged.connect(self.setDescription)
+        self.advertisement_id = ""
+        for x in range(6):
+            self.advertisement_id += str(randint(0, 9))
 
-    # def setName(self):
-    #     self.name = self.name_edit.text()
+        self.accepted.connect(self.confirm)
+        self.rejected.connect(self.dbDisconnect)
 
-    # def setType(self):
-    #     self.type = self.type_edit.text()
-        
-    # def setCost(self):
-    #     self.cost = self.cost_edit.text()
-        
-    # def setDesription(self):
-    #     self.description = self.description_edit.toPlainText()
+    def setStatus(self):
+        self.status = self.status_edit.text()
+
+    def setName(self):
+        self.name = self.name_edit.text()
+
+    def setType(self):
+        self.type = self.type_edit.text()
+
+    def setCost(self):
+        self.cost = self.cost_edit.text()
+
+    def setDescription(self):
+        self.description = self.description_edit.toPlainText()
+
+    def confirm(self):
+        db_ops.add_advertisement(self.connection, self.advertisement_id, self.status, self.name, self.type,
+                                 self.description, self.cost, '0')  # New advertisement, assume view count is 0.
+
+    def dbDisconnect(self):
+        self.connection.close()
     
 class SingleAdvertisement(QDialog):
     def __init__(self):

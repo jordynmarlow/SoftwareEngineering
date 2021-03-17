@@ -212,3 +212,9 @@ def add_timesheet(connection, employee_id):
                         "MONDAY FLOAT NOT NULL,TUESDAY FLOAT NOT NULL,WEDNESDAY FLOAT NOT NULL,THURSDAY FLOAT NOT NULL,"
                        "FRIDAY FLOAT NOT NULL,SATURDAY FLOAT NOT NULL,TOTAL_HOURS FLOAT NOT NULL );" % employee_id)
     connection.commit()
+
+def add_advertisement(connection, advertisement_id, status, name, type, description, cost, view_count):
+    connection.execute("INSERT INTO Advertisements (ADVERTISEMENT_ID,STATUS,NAME,TYPE,DESCRIPTION,COST,VIEW_COUNT) VALUES "
+                       "('%s','%s','%s','%s','%s')" % advertisement_id, status, name, type, description, cost, view_count)
+    connection.commit()
+    print("Advertisement added!")
