@@ -89,10 +89,62 @@ class OrdersDatabase():
         sql_cursor.execute('update WorkOrders set MECHANIC = \'%s\' where ORDER_ID = \'%s\'' % (new_mechanic, order_id))
 
 class Timesheet(QDialog):
-    def __init__(self):
+    def __init__(self, employee_id):
         super().__init__()
+        # self.connection = db_ops.connect_db('MotorDB.db')
         uic.loadUi(UI_PATH + 'TimesheetDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
+        
+        # Assuming QTimeEdit
+        
+        # from database, pull timesheet values
+        # lookup using employee_id
+        
+        # self.sun_wh.time() = 
+        # self.sun_bh.time() = 
+        # self.sun_nh.time() = 
+        # self.mon_wh.time() = 
+        # self.mon_bh.time() = 
+        # self.mon_nh.time() = 
+        # self.tues_wh.time() = 
+        # self.tues_bh.time() = 
+        # self.tues_nh.time() = 
+        # self.wed_wh.time() = 
+        # self.wed_bh.time() = 
+        # self.wed_nh.time() = 
+        # self.thurs_wh.time() = 
+        # self.thurs_bh.time() = 
+        # self.thurs_nh.time() = 
+        # self.fri_wh.time() = 
+        # self.fri_bh.time() = 
+        # self.fri_nh.time() = 
+        # self.sat_wh.time() = 
+        # self.sat_bh.time() = 
+        # self.sat_nh.time() = 
+        
+        # save all values set in box back to database timesheet
+        
+        # self.sun_wh.time() = 
+        # self.sun_bh.time() = 
+        # self.sun_nh.time() = self.sun_bh.time() - self.wh_time().time() (net hours automatically calculated in GUI?)
+        # self.mon_wh.time() = 
+        # self.mon_bh.time() = 
+        # self.mon_nh.time() = 
+        # self.tues_wh.time() = 
+        # self.tues_bh.time() = 
+        # self.tues_nh.time() = 
+        # self.wed_wh.time() = 
+        # self.wed_bh.time() = 
+        # self.wed_nh.time() = 
+        # self.thurs_wh.time() = 
+        # self.thurs_bh.time() = 
+        # self.thurs_nh.time() = 
+        # self.fri_wh.time() = 
+        # self.fri_bh.time() = 
+        # self.fri_nh.time() = 
+        # self.sat_wh.time() = 
+        # self.sat_bh.time() = 
+        # self.sat_nh.time() = 
 
 class Employees(QDialog):
     def __init__(self):
@@ -125,10 +177,11 @@ class AddEmployee(QDialog):
         # self.address_edit.selectionChanged.connect(self.setAddress)
         # self.salary_edit.selectionChanged.connect(self.setSalary)
         # self.comments_edit.selectionChanged.connect(self.setComments)
-        self.employee_id_edit = ""
+        self.employee_id = ""
         for x in range(6):
-            self.employee_id_edit += str(randint(0,9))
-
+            self.employee_id += str(randint(0,9))
+        self.employee_id_edit.setText(self.employee_id)
+        
         self.accepted.connect(self.confirm)
         self.rejected.connect(self.dbDisconnect)
 
@@ -156,9 +209,166 @@ class AddEmployee(QDialog):
     def confirm(self):
         db_ops.add_employee(self.connection, self.employee_id, self.name, self.position, self.status)
         db_ops.add_timesheet(self.connection, self.employee_id)
+        config = configparser.ConfigParser()
+        config.read(CONFIG_FILE)
+        config.sections()
+        config.set('LOGIN', employee_id, '1234') # default PIN is 1234
+        with open(CONFIG_FILE, 'w') as configfile:
+            config.write(configfile)
 
     def dbDisconnect(self):
         self.connection.close()
+
+class EditProductItem(QDialog):
+    def __init__(self, itempage):
+            super().__init__()
+            self.homepage = homepage
+            uic.loadUi(UI_PATH + 'EditProductItemDialog.ui', self)
+            self.setStyleSheet(open('Stylesheet.qss').read())
+            
+    # pulling from previous page
+    #     self.year_edit.setText(itempage.year_edit.text())
+    #     self.make_edit.setText(itempage.make_edit.text())
+    #     self.model_edit.setText(itempage.model_edit.text())
+    #     self.color_edit.setText(itempage.color_edit.text())
+    #     self.price_edit.setText(itempage.price_edit.text())
+    #     self.quantity_box.setText(itempage.quantity_box.text())
+    #     self.desc_text.setText(itempage.desc_text.text())
+            
+    # pushing changes to database
+    #     self.year_edit.editingFinished.connect(self.setYear)
+    #     self.make_edit.editingFinished.connect(self.setMake)
+    #     self.model_edit.editingFinished.connect(self.setModel)
+    #     self.color_edit.editingFinished.connect(self.setColor)
+    #     self.price_edit.editingFinished.connect(self.setPrice)
+    #     self.quantity_box.textChanged.connect(self.setQuantity)
+    #     self.desc_text.textChanged.connect(self.setDescription)
+
+    #     self.accepted.connect(self.confirm)
+    #     self.rejected.connect(self.dbDisconnect)
+
+    # def setYear(self):
+    #     self.year = self.year_edit.text()
+
+    # def setMake(self):
+    #     self.make = self.make_edit.text()
+
+    # def setModel(self):
+    #     self.model = self.model_edit.text()
+
+    # def setColor(self):
+    #     self.color = self.color_edit.text()
+
+    # def setPrice(self):
+    #     self.price = self.price_edit.text()
+
+    # def setQuantity(self):
+    #     self.quantity = self.quantity_box.cleanText()
+
+    # def setDescription(self):
+    #     self.description = self.desc_text.toPlainText()
+
+    # where to get the item number? itempage?
+    # def confirm(self):
+    #     self.name = self.year + " " + self.make + " " + self.model
+    #     db_ops.edit_product(self.connection, itempage.item_number, self.year, self.make, self.model, self.name, self.color,
+    #                        self.price, self.quantity, self.description)
+
+    # def dbDisconnect(self):
+    #         self.connection.close()
+            
+class EditPartItem(QDialog):
+    def __init__(self, itempage):
+            super().__init__()
+            self.homepage = homepage
+            uic.loadUi(UI_PATH + 'EditParttItemDialog.ui', self)
+            self.setStyleSheet(open('Stylesheet.qss').read())
+            
+    # pulling from previous page
+    #     self.name_edit.setText(itempage.name_edit.text())
+    #     self.price_edit.setText(itempage.price_edit.text())
+    #     self.quantity_box.setText(itempage.quantity_box.text())
+    #     self.desc_text.setText(itempage.desc_text.text())
+    
+    # pushing changes to database
+    #     self.name_edit.editingFinished.connect(self.setName)
+    #     self.price_edit.editingFinished.connect(self.setPrice)
+    #     self.quantity_box.textChanged.connect(self.setQuantity)
+    #     self.desc_text.textChanged.connect(self.setDescription)
+
+    #     self.accepted.connect(self.confirm)
+    #     self.rejected.connect(self.dbDisconnect)
+
+    # def setName(self):
+    #     self.name = self.name_edit.text()
+
+    # def setPrice(self):
+    #     self.price = self.price_edit.text()
+
+    # def setQuantity(self):
+    #     self.quantity = self.quantity_box.cleanText()
+
+    # def setDescription(self):
+    #     self.description = self.desc_text.toPlainText()
+    
+    # where to get the item number? itempage?
+    # def confirm(self):
+    #     db_ops.add_part(self.connection, itempage.item_number, self.name, self.price, self.quantity, self.description)
+
+    # def dbDisconnect(self):
+    #     self.connection.close()
+            
+class EditMerchandiseItem(QDialog):
+    def __init__(self, itempage):
+            super().__init__()
+            self.homepage = homepage
+            uic.loadUi(UI_PATH + 'EditMerchandiseItemDialog.ui', self)
+            self.setStyleSheet(open('Stylesheet.qss').read())
+            
+    # pulling from previous page
+    #     self.name_edit.setText(itempage.name_edit.text())
+    #     self.color_edit.setText(itempage.color_edit.text())
+    #     self.size_edit.setText(itempage.size_edit.text())
+    #     self.price_edit.setText(itempage.price_edit.text())
+    #     self.quantity_box.setText(itempage.quantity_box.text())
+    #     self.desc_text.setText(itempage.desc_text.text())
+    
+    # pushing changes to database
+    #     self.name_edit.editingFinished.connect(self.setName)
+    #     self.color_edit.editingFinished.connect(self.setColor)
+    #     self.size_edit.editingFinished.connect(self.setSize)
+    #     self.price_edit.editingFinished.connect(self.setPrice)
+    #     self.quantity_box.textChanged.connect(self.setQuantity)
+    #     self.desc_text.textChanged.connect(self.setDescription)
+
+    #     self.accepted.connect(self.confirm)
+    #     self.rejected.connect(self.dbDisconnect)
+
+    # def setName(self):
+    #     self.name = self.name_edit.text()
+
+    # def setColor(self):
+    #     self.color = self.color_edit.text()
+
+    # def setSize(self):
+    #     self.size = self.size_edit.text()
+
+    # def setPrice(self):
+    #     self.price = self.price_edit.text()
+
+    # def setQuantity(self):
+    #     self.quantity = self.quantity_box.cleanText()
+
+    # def setDescription(self):
+    #     self.description = self.desc_text.toPlainText()
+
+    # def confirm(self):
+    #     db_ops.add_merchandise(self.connection, self.item_number, self.name, self.color, self.size, self.price,
+    #                            self.quantity, self.description)
+
+    # def dbDisconnect(self):
+    #     self.connection.close()
+    
 
 class SingleEmployee(QDialog):
     def __init__(self):
@@ -553,6 +763,26 @@ class Inventory(QDialog):
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.new_order_bt.clicked.connect(self.openNewOrder)
         self.restock_bt.clicked.connect(self.restockItem)
+        
+    # need if-logic here to read label and open correct edit
+    # self.edit_bt.clicked.connect(self.openEditProduct)
+    # self.edit_bt.clicked.connect(self.openEditPart)
+    # self.edit_bt.clicked.connect(self.openEditMerchandise)
+
+    # def openEditProduct(self):
+    #     #open EditProductDialog.ui
+    #     dlg = EditProduct()
+    #     dlg.exec_()
+        
+    # def openEditPart(self):
+    #     #open EditPartDialog.ui
+    #     dlg = EditPart()
+    #     dlg.exec_()
+
+    # def openEditMerchandise(self):
+    #     #open EditMerchandiseDialog.ui
+    #     dlg = EditMerchandise()
+    #     dlg.exec_()
     
     def restockItem(self):
         inventory.set_quantity(self.item_no, self.restock_quantity_sb.value())
@@ -903,13 +1133,14 @@ class Homepage(QMainWindow):
     def openOrderFilters(self):
         self.order_filters.exec_()
         self.populateOrdersList()
-
+            
     def openTimesheet(self):
         # open TimeSheetDialog.ui
-        if self.verifyID():
-            dlg = Timesheet()
+        verify = self.verifyID()
+        if verify:
+            dlg = Timesheet(verify[1])
             dlg.exec_()
-
+            
     def openEmployees(self):
         # open EmployeesDialog.ui
         if self.getPIN('manager'):
