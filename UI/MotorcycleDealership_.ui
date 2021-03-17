@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MotorcycleDealership</class>
- <widget class="QMainWindow" name="MotorcycleDealership">
+ <class>merging</class>
+ <widget class="QMainWindow" name="merging">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -21,8 +21,8 @@ color: black;</string>
    <widget class="QPushButton" name="filter_inventory_bt">
     <property name="geometry">
      <rect>
-      <x>680</x>
-      <y>45</y>
+      <x>700</x>
+      <y>50</y>
       <width>31</width>
       <height>23</height>
      </rect>
@@ -32,7 +32,7 @@ color: black;</string>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../images/filter.png</normaloff>../images/filter.png</iconset>
+      <normaloff>images/filter.png</normaloff>images/filter.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="new_order_bt">
@@ -151,25 +151,6 @@ color: black;</string>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="add_item_bt">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>80</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Add Item</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -197,7 +178,53 @@ color: black;</string>
      <string notr="true"/>
     </property>
    </widget>
-   <widget class="QPushButton" name="filter_orders_bt">
+   <widget class="QScrollArea" name="order_scroll_area">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>70</y>
+      <width>341</width>
+      <height>581</height>
+     </rect>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>339</width>
+       <height>579</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QScrollArea" name="inventory_scroll_area">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>711</width>
+      <height>581</height>
+     </rect>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>709</width>
+       <height>579</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="filter_order_bt">
     <property name="geometry">
      <rect>
       <x>1030</x>
@@ -211,36 +238,72 @@ color: black;</string>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../images/filter.png</normaloff>../images/filter.png</iconset>
+      <normaloff>images/filter.png</normaloff>images/filter.png</iconset>
     </property>
    </widget>
-   <widget class="QListWidget" name="inventory_list">
+   <widget class="QPushButton" name="temp_inv_bt">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>711</width>
-      <height>581</height>
+      <x>560</x>
+      <y>45</y>
+      <width>101</width>
+      <height>23</height>
      </rect>
     </property>
+    <property name="text">
+     <string>Temp Inventory</string>
+    </property>
    </widget>
-   <widget class="QListWidget" name="orders_list">
+   <widget class="QPushButton" name="add_product_bt">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>70</y>
-      <width>341</width>
-      <height>581</height>
+      <x>430</x>
+      <y>50</y>
+      <width>101</width>
+      <height>23</height>
      </rect>
+    </property>
+    <property name="text">
+     <string>Add Product</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="add_part_bt">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>50</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add Part</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="add_merch_bt">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>50</y>
+      <width>151</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add Merchandise</string>
     </property>
    </widget>
    <zorder>widget</zorder>
    <zorder>filter_inventory_bt</zorder>
    <zorder>new_order_bt</zorder>
    <zorder>horizontalLayoutWidget</zorder>
-   <zorder>filter_orders_bt</zorder>
-   <zorder>inventory_list</zorder>
-   <zorder>orders_list</zorder>
+   <zorder>order_scroll_area</zorder>
+   <zorder>inventory_scroll_area</zorder>
+   <zorder>filter_order_bt</zorder>
+   <zorder>temp_inv_bt</zorder>
+   <zorder>add_product_bt</zorder>
+   <zorder>add_part_bt</zorder>
+   <zorder>add_merch_bt</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

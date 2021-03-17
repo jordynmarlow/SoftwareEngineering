@@ -6,37 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>543</width>
+    <width>545</width>
     <height>280</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="name_lbl">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>501</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>[item name]</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="description_lbl">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>60</y>
+     <y>20</y>
      <width>361</width>
-     <height>201</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="text">
-    <string>[item description]</string>
+    <string>[order description]</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -45,30 +32,20 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="restock_bt">
+  <widget class="QPushButton" name="reassign_mechanic_bt">
    <property name="geometry">
     <rect>
      <x>410</x>
-     <y>198</y>
+     <y>20</y>
      <width>121</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>Restock</string>
+    <string>Reassign Mechanic</string>
    </property>
   </widget>
-  <widget class="QSpinBox" name="restock_quantity_sb">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>170</y>
-     <width>121</width>
-     <height>23</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="remove_bt">
+  <widget class="QPushButton" name="archive_bt">
    <property name="geometry">
     <rect>
      <x>410</x>
@@ -78,20 +55,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Remove</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="new_order_bt">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>80</y>
-     <width>121</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>New Order</string>
+    <string>Archive</string>
    </property>
   </widget>
  </widget>
