@@ -45,7 +45,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="reorder_bt">
+  <widget class="QPushButton" name="restock_bt">
    <property name="geometry">
     <rect>
      <x>410</x>
@@ -58,7 +58,7 @@
     <string>Restock</string>
    </property>
   </widget>
-  <widget class="QSpinBox" name="reorder_quantity_sb">
+  <widget class="QSpinBox" name="restock_quantity_sb">
    <property name="geometry">
     <rect>
      <x>410</x>

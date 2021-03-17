@@ -11,51 +11,82 @@ CONFIG_FILE = 'config.ini'
 UI_PATH = './UI/'
 
 sql_connection = None
-
-def connect_to_db():
-    try:
-        sql_connection = sqlite3.connect('MotorDB.db')  # Try to connect to the database
-    except Error as e:  # ...Except if there is an sqlite3 error,
-        print(e)  # print the error
-    return sql_connection.cursor()
+try:
+    sql_connection = sqlite3.connect('MotorDB.db')  # Try to connect to the database
+except Error as e:  # ...Except if there is an sqlite3 error,
+    print(e)  # print the error
+sql_cursor = sql_connection.cursor()
 
 class InventoryDatabase():
     def __init__(self):
-        self.cursor = connect_to_db()
+        pass
 
     def get_fields(self, item_no):
         if item_no[0] == 'M': # merchandise item
-            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR, I.SIZE FROM MerchandiseInventory I WHERE I.ITEM_NUMBER=\'%s\'' % (item_no))
+            sql_cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR, I.SIZE FROM MerchandiseInventory I WHERE I.ITEM_NUMBER=\'%s\'' % (item_no))
         elif item_no[0] == 'B': # bike item
-            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR FROM ProductsInventory I WHERE I.ITEM_NUMBER=\'%s\'' % (item_no))
+            sql_cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR FROM ProductsInventory I WHERE I.ITEM_NUMBER=\'%s\'' % (item_no))
         elif item_no[0] == 'P': # parts item
-            self.cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE FROM PartsInventory I WHERE I.ITEM_NUMBER=\'%s\'' % (item_no))
-        return self.cursor.fetchall()
+            sql_cursor.execute('SELECT I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE FROM PartsInventory I WHERE I.ITEM_NUMBER=\'%s\'' % (item_no))
+        return sql_cursor.fetchall()
 
     def get_inventory_items(self, query):
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        sql_cursor.execute(query)
+        return sql_cursor.fetchall()
+    
+    def get_table(self, character):
+        if character == 'M': # merchandise item
+            return 'MerchandiseInventory'
+        elif character == 'B': # bike item
+            return 'ProductsInventory'
+        elif character == 'P': # parts item
+            return 'PartsInventory'
+    
+    def get_quantity(self, item_no):
+        sql_cursor.execute('select I.QUANTITY from %s I where I.ITEM_NUMBER=\'%s\'' % (self.get_table(item_no[0]), item_no))
+        return sql_cursor.fetchall()[0][0]
+
+    def set_quantity(self, item_no, quantity):
+        sql_cursor.execute('update %s set QUANTITY = %d where ITEM_NUMBER=\'%s\'' % (self.get_table(item_no[0]), self.get_quantity(item_no) + quantity, item_no))
 
 class OrdersDatabase(): 
     def __init__(self):
-        self.cursor = connect_to_db()
+        pass
     
     def get_fields(self, order_id):
         if order_id[0] == 'M': # merchandise order
-            self.cursor.execute('SELECT O.ORDER_ID, O.DATE, O.SIZE, O.COLOR FROM MerchandiseOrders O WHERE O.ORDER_ID=\'%s\'' % (order_id))
+            labels = ['Order Number', 'Item Number', 'Date']
+            sql_cursor.execute('SELECT O.ORDER_ID, O.ITEM_NUMBER, O.DATE FROM MerchandiseOrders O WHERE O.ORDER_ID=\'%s\'' % (order_id))
         elif order_id[0] == 'B': # bike order
-            self.cursor.execute('SELECT O.ORDER_ID, O.NAME, O.DATE, O.INTEREST_RATE, O.COLOR FROM BikeOrders O WHERE O.ORDER_ID=\'%s\'' % (order_id))
+            labels = ['Order Number', 'Item Number', 'Date', 'Interest Rate']
+            sql_cursor.execute('SELECT O.ORDER_ID, O.ITEM_NUMBER, O.DATE, O.INTEREST_RATE FROM BikeOrders O WHERE O.ORDER_ID=\'%s\'' % (order_id))
         elif order_id[0] == 'P': # parts order
-            self.cursor.execute('SELECT O.ORDER_ID, O.DATE, O.CUSTOMER_FIRST, O.CUSTOMER_LAST, O.PHONE_NUMBER, O.MECHANIC FROM WorkOrders O WHERE O.ORDER_ID=\'%s\'' % (order_id))
-        return self.cursor.fetchall()
+            labels = ['Order Number', 'Item Number', 'Date', 'First Name', 'Last Name', 'Phone Number', 'Mechanic', 'Archived']
+            sql_cursor.execute('SELECT O.ORDER_ID, O.ITEM_NUMBER, O.DATE, O.CUSTOMER_FIRST, O.CUSTOMER_LAST, O.PHONE_NUMBER, O.MECHANIC, O.ARCHIVED FROM WorkOrders O WHERE O.ORDER_ID=\'%s\'' % (order_id))
+        return labels, sql_cursor.fetchall()
+    
+    def get_table(self, character):
+        if character == 'M': # merchandise order
+            return 'MerchandiseOrders'
+        elif character == 'B': # bike order
+            return 'BikeOrders'
+        elif character == 'P': # work order
+            return 'WorkOrders'
 
-    def get_mechanics(order_id):
-        self.cursor.execute('SELECT O.MECHANIC FROM WorkOrders O WHERE O.ORDER_ID=%s' % (order_id))
-        return self.cursor.fetchall()
+    def get_mechanics(self):
+        sql_cursor.execute('select E.EMPLOYEE_ID from Employees E where E.POSITION=\'Mechanic\'')
+        mechanics = [i[0] for i in sql_cursor.fetchall()]
+        return mechanics
     
     def get_order_items(self, query):
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        sql_cursor.execute(query)
+        return sql_cursor.fetchall()
+
+    def archive(self, order_id):
+        sql_cursor.execute('update %s set ARCHIVED = 1 where ORDER_ID=\'%s\'' % (self.get_table(order_id[0]), order_id))
+    
+    def set_mechanic(self, order_id, new_mechanic):
+        sql_cursor.execute('update WorkOrders set MECHANIC = \'%s\' where ORDER_ID = \'%s\'' % (new_mechanic, order_id))
 
 class Timesheet(QDialog):
     def __init__(self):
@@ -247,17 +278,36 @@ class SingleAdvertisement(QDialog):
         dlg.exec_()
     
 class Order(QDialog):
-    def __init__(self):
+    def __init__(self, order_id, homepage):
         super().__init__()
         uic.loadUi(UI_PATH + 'OrderDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
+        self.order_id = order_id
+        self.homepage = homepage
+        self.populateFields()
+        self.reassign_mechanic_bt.clicked.connect(self.reassign_mechanic)
+        self.archive_bt.clicked.connect(self.archive)
+    
+    def reassign_mechanic(self):
+        if self.homepage.getPIN('manager'):
+            mechanics = orders.get_mechanics()
+            new_mechanic, ok = QInputDialog.getItem(self, 'Reassign Mechanic', 'Choose a new mechanic.', mechanics)
+            orders.set_mechanic(self.order_id, new_mechanic)
+            self.populateFields()
 
-    def populateFields(self, values):
-        labels = ['Item Number', 'Quantity', 'Price', 'Color', 'Size']
+    def archive(self):
+        orders.archive(self.order_id)
+        self.populateFields()
+
+    def populateFields(self):
+        labels, values = orders.get_fields(self.order_id)
         desc = ''
         for i in range(0, len(values[0])):
-            desc += labels[i] + ': ' + values[0][i] + '\n'
+            desc += labels[i] + ': ' + str(values[0][i]) + '\n'
         self.description_lbl.setText(desc)
+        if self.order_id[0] != 'P':
+            self.reassign_mechanic_bt.hide()
+            self.archive_bt.hide()
 
 class EditAdvertisement(QDialog):
     def __init__(self):
@@ -502,28 +552,31 @@ class Inventory(QDialog):
         uic.loadUi(UI_PATH + 'InventoryDialog.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
         self.new_order_bt.clicked.connect(self.openNewOrder)
+        self.restock_bt.clicked.connect(self.restockItem)
     
-    #I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR, I.SIZE
-    #I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE, I.COLOR
-    #I.NAME, I.ITEM_NUMBER, I.QUANTITY, I.PRICE
-    def populateFields(self, values):
-        print(values)
+    def restockItem(self):
+        inventory.set_quantity(self.item_no, self.restock_quantity_sb.value())
+        self.populateFields(self.item_no)
+    
+    def populateFields(self, item_no):
+        self.item_no = item_no
+        values = inventory.get_fields(item_no)
         self.name_lbl.setText(values[0][0])
         labels = ['Name', 'Item Number', 'Quantity', 'Price', 'Color', 'Size']
+        self.item_no = values[0][1]
         desc = ''
         for i in range(1, len(values[0])):
-            desc += labels[i] + ': ' + values[0][i] + '\n'
-        self.description_lbl.setText(QString(desc))
+            desc += labels[i] + ': ' + str(values[0][i]) + '\n'
+        self.description_lbl.setText(desc)
 
     def openNewOrder(self):  # open one of the 3 new orders
-        typeLabel = self.type_lbl.text()
-        if (typeLabel == "Motorcycle"):
+        if self.item_no[0] == 'B':
             dlg = NewBikeOrder(self)
 
-        if (typeLabel == "Part"):
+        elif self.item_no[0] == 'P':
             dlg = NewWorkOrder(self)
 
-        if (typeLabel == "Merchandise"):
+        elif self.item_no[0] == 'M':
             dlg = MerchandiseOrder(self)
 
         dlg.exec_()
@@ -707,21 +760,33 @@ class OrderFilters(QDialog):
         self.homepage = homepage
         uic.loadUi(UI_PATH + 'FilterOrders.ui', self)
         self.setStyleSheet(open('Stylesheet.qss').read())
+        self.filter_mechanics_combo.hide()
         self.show_items_bt.clicked.connect(self.update_list)
+        self.work_rb.toggled.connect(self.extra_filters)
+        self.filter_mechanics_combo.addItem('Filter by mechanic...')
+        for mechanic in orders.get_mechanics():
+            self.filter_mechanics_combo.addItem(mechanic)
+    
+    def extra_filters(self):
+        if self.work_rb.isChecked():
+            self.filter_mechanics_combo.show()
+        else:
+            self.filter_mechanics_combo.hide()
     
     def update_list(self):
-        cols = 'O.ORDER_ID, O.DATE'
-        merch = 'SELECT %s FROM MerchandiseOrders O' % (cols)
-        work = 'SELECT %s FROM WorkOrders O' % (cols)
-        bikes = 'SELECT %s FROM BikeOrders O' % (cols)
+        merch = 'SELECT O.ORDER_ID, O.DATE FROM MerchandiseOrders O'
+        work = 'SELECT O.ORDER_ID, O.DATE FROM WorkOrders O'
+        bikes = 'SELECT O.ORDER_ID, O.DATE FROM BikeOrders O'
         if self.merch_rb.isChecked():
             query = merch
         elif self.work_rb.isChecked():
             query = work
+            if self.filter_mechanics_combo.currentIndex() > 0:
+                query += ' where O.MECHANIC=\'%s\'' % (self.filter_mechanics_combo.currentText())
         elif self.bikes_rb.isChecked():
             query = bikes
         else: # all_rb is checked
-            query = 'SELECT * FROM (%s UNION %s UNION %s) O' % (merch, work, bikes)
+            query = 'SELECT O.ORDER_ID, O.DATE FROM (%s UNION %s UNION %s) O' % (merch, work, bikes)
         self.items = orders.get_order_items(query)
         self.close()
 
@@ -749,6 +814,15 @@ class Homepage(QMainWindow):
         self.orders_list.itemClicked.connect(self.openOrder)
         self.filter_inventory_bt.clicked.connect(self.openInventoryFilters)
         self.filter_orders_bt.clicked.connect(self.openOrderFilters)
+
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Exit', 'Are you sure you want to exit?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            sql_cursor.close()
+            sql_connection.commit()
+            event.accept()
+        else:
+            event.ignore()
 
     def addItem(self):
         items = ['Bike', 'Part', 'Merchandise']
@@ -857,8 +931,7 @@ class Homepage(QMainWindow):
         # open InventoryDialog.ui
         dlg = Inventory()
         item_no = item.text().split('\t')[0]
-        values = inventory.get_fields(item_no)
-        dlg.populateFields(values)
+        dlg.populateFields(item_no)
         dlg.exec_()
 
     def openNewProduct(self):
@@ -867,9 +940,8 @@ class Homepage(QMainWindow):
     
     def openOrder(self, item):
         #open OrderDialog.ui
-        dlg = Order()
         order_id = item.text().split('\t')[0]
-        dlg.populateFields(orders.get_fields(order_id))
+        dlg = Order(order_id, self)
         dlg.exec_()
 
     def openNewPart(self):
