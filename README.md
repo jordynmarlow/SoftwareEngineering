@@ -6,7 +6,6 @@ This software provides an interface for inventory items, orders, timesheets, and
 Our scrum board is located at https://trello.com/b/mSvABA37/motorcycle-dealership
 
 ## How To Run
----
 
 Must have Python 3.8 or above and PyQt5.
 
@@ -21,7 +20,6 @@ python MotorcycleDealership.py
 ```
 
 ## Authors
----
 Phillip Nguyen (github.com/SacredTie)
 
 Garrett Jones (github.com/gjones1223)
