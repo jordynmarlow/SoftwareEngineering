@@ -117,7 +117,7 @@ def add_work_order(connection, order_id, item_number, start_date, end_date, cust
     # Uses the connection object to execute an insertion. Important: arguments used in VALUES need to be strings inside
     # strings. When we implement this, we can totally just use (str(str()) on user input values.
     connection.execute(
-        "INSERT INTO WorkOrders (ORDER_ID,ITEM_NUMBER,START_DATE,END_DATE,CUSTOMER_FIRST,CUSTOMER_LAST,PHONE_NUMBER,"
+        "INSERT INTO WorkOrders (ORDER_ID,ITEM_NUMBER,DATE,END_DATE,CUSTOMER_FIRST,CUSTOMER_LAST,PHONE_NUMBER,"
         "MECHANIC,COMMENTS,ARCHIVED) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"
         % (order_id, item_number, start_date, end_date, customer_first, customer_last, phone_number, mechanic, comments, archived))
 

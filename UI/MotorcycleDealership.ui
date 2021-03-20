@@ -35,19 +35,6 @@ color: black;</string>
       <normaloff>../images/filter.png</normaloff>../images/filter.png</iconset>
     </property>
    </widget>
-   <widget class="QPushButton" name="new_order_bt">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>45</y>
-      <width>161</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>New Order</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
@@ -236,7 +223,6 @@ color: black;</string>
    </widget>
    <zorder>widget</zorder>
    <zorder>filter_inventory_bt</zorder>
-   <zorder>new_order_bt</zorder>
    <zorder>horizontalLayoutWidget</zorder>
    <zorder>filter_orders_bt</zorder>
    <zorder>inventory_list</zorder>
