@@ -19,6 +19,10 @@ Execute the following bash command to run:
 python MotorcycleDealership.py
 ```
 
+Login credentials are required for certain actions. The manager's login credentials are:  
+username: manager  
+password: 0000
+
 ## Authors
 Phillip Nguyen (github.com/SacredTie)
 
